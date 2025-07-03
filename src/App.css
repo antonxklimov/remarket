@@ -952,7 +952,7 @@ hr, .hero-block__secondary-hr {
 
 /* Специальные классы для больших заголовков */
 .main-content-inner h1.large-title {
-  font-size: 11rem !important;
+  font-size: 13rem !important;
   font-weight: 700 !important;
   line-height: 0.9 !important;
 }
@@ -993,7 +993,7 @@ hr, .hero-block__secondary-hr {
   
   /* Мобильные версии больших заголовков */
   .main-content-inner h1.large-title {
-    font-size: 6rem !important;
+    font-size: 7rem !important;
   }
   
   .main-content-inner h1.hero-title {
@@ -1001,7 +1001,7 @@ hr, .hero-block__secondary-hr {
   }
   .hero-block__caption,
   .main-content-inner p {
-    font-size: 1.1rem;
+    font-size: 1.8rem;
     margin-bottom: 16px;
   }
 }
@@ -1224,24 +1224,67 @@ hr, .hero-block__secondary-hr {
 }
 
 .main-content-inner p {
-  font-size: 1.6rem;
+  font-size: 2.2rem;
 }
 
-/* Принудительный перенос текста для всех элементов */
+/* Правильная типографика для текста */
 .main-content-inner p,
-.main-content-inner div,
+.main-content-inner div[dangerouslySetInnerHTML],
 .main-content-inner h1,
 .main-content-inner h2,
-.main-content-inner h3,
-.main-content-inner span,
-.main-content-inner a {
+.main-content-inner h3 {
   max-width: 100% !important;
   box-sizing: border-box !important;
   overflow-wrap: break-word !important;
   word-wrap: break-word !important;
-  word-break: break-word !important;
   hyphens: auto !important;
   white-space: normal !important;
+  /* Висячие союзы и предлоги */
+  text-wrap: balance !important;
+}
+
+/* Специальные правила для заголовков */
+.main-content-inner h1.large-title,
+.main-content-inner h1.hero-title {
+  text-wrap: balance !important;
+  word-break: normal !important;
+  hyphens: none !important;
+  white-space: normal !important;
+}
+
+/* Обработка длинных URL и ссылок */
+.main-content-inner a,
+.main-content-inner span {
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+  max-width: 100% !important;
+}
+
+/* Улучшенная типографика для лучшей читаемости */
+.main-content-inner {
+  /* Висячие союзы и предлоги */
+  text-rendering: optimizeLegibility;
+  -webkit-font-feature-settings: "kern" 1;
+  font-feature-settings: "kern" 1;
+  -webkit-font-kerning: normal;
+  font-kerning: normal;
+}
+
+/* Специальные правила для русского текста */
+.main-content-inner p {
+  orphans: 2;
+  widows: 2;
+  text-align: left;
+  word-spacing: 0.05em;
+  line-height: 1.6;
+}
+
+/* Правильные переносы для заголовков */
+.main-content-inner h1,
+.main-content-inner h2 {
+  orphans: 2;
+  widows: 2;
+  text-align: left;
 }
 
 /* Контейнеры секций - только ограничение по ширине без overflow */

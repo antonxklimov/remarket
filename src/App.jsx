@@ -160,7 +160,7 @@ function App() {
               
               // Правильный расчет размеров для каждой секции
               const headerHeight = section.largeTitle ? (i === 0 ? 160 : 220) : 100; // Больше места для первой секции
-              const textHeight = 120;
+              const textHeight = 140; // Увеличено для более крупного текста
               const margins = i === 0 ? 64 : 48; // Больше отступов для первой секции
               
               const imageHeight = Math.max(200, availableHeight - headerHeight - textHeight - margins);
@@ -279,7 +279,7 @@ function App() {
                   {/* Текст - компактная полоска внизу */}
                   <div
                     style={{
-                      fontSize: '1.6rem', 
+                      fontSize: '2.2rem', 
                       color: '#444', 
                       lineHeight: 1.5,
                       height: `${textHeight}px`,
@@ -333,7 +333,7 @@ function App() {
         {visibleSections.map((section, i) => {
           // Простые размеры для мобильных
           const imageHeight = windowWidth <= 600 ? 250 : 350;
-          const textSize = 1.6;
+          const textSize = 1.8; // Увеличено для лучшей читаемости на мобильных
           
           return (
           <section
