@@ -5,7 +5,7 @@ import './App.css'
 import { defaultSections } from './sectionsData'
 import SwiperGallery from './components/SwiperGallery'
 
-const API_BASE_URL = 'http://localhost:3001/api';
+const API_BASE_URL = '/api';
 
 function scrollToSection(e, id) {
   e.preventDefault();
