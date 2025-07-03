@@ -114,25 +114,75 @@ export default function AdminPanel() {
     setSections(sections => sections.map((s, i) => i === idx ? { ...s, editorState, text: html } : s));
   }
 
-  function handleImage(idx, file) {
-    const reader = new FileReader();
-    reader.onload = e => {
-      handleChange(idx, 'image', e.target.result);
-    };
-    if (file) reader.readAsDataURL(file);
+  async function uploadImage(file) {
+    const formData = new FormData();
+    formData.append('image', file);
+    
+    try {
+      const response = await fetch(`${API_BASE_URL}/upload`, {
+        method: 'POST',
+        body: formData,
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const result = await response.json();
+      return result.url;
+    } catch (error) {
+      console.error('Ошибка загрузки изображения:', error);
+      alert('Ошибка загрузки изображения. Попробуйте еще раз.');
+      return null;
+    }
   }
 
-  function handleGalleryImage(idx, file) {
-    const reader = new FileReader();
-    reader.onload = e => {
+  async function handleImage(idx, file) {
+    if (!file) return;
+    
+    // Показываем индикатор загрузки
+    handleChange(idx, 'image', 'loading...');
+    
+    // Загружаем изображение на сервер
+    const imageUrl = await uploadImage(file);
+    if (imageUrl) {
+      handleChange(idx, 'image', imageUrl);
+    } else {
+      handleChange(idx, 'image', '');
+    }
+  }
+
+  async function handleGalleryImage(idx, file) {
+    if (!file) return;
+    
+    // Показываем индикатор загрузки
+    setSections(sections => sections.map((s, i) => {
+      if (i !== idx) return s;
+      const gallery = Array.isArray(s.gallery) ? s.gallery.slice(0, 3) : [];
+      if (gallery.length < 3) gallery.push('loading...');
+      return { ...s, gallery };
+    }));
+    
+    // Загружаем изображение на сервер
+    const imageUrl = await uploadImage(file);
+    if (imageUrl) {
       setSections(sections => sections.map((s, i) => {
         if (i !== idx) return s;
-        const gallery = Array.isArray(s.gallery) ? s.gallery.slice(0, 3) : [];
-        if (gallery.length < 3) gallery.push(e.target.result);
+        const gallery = Array.isArray(s.gallery) ? s.gallery.slice() : [];
+        const loadingIndex = gallery.indexOf('loading...');
+        if (loadingIndex !== -1) {
+          gallery[loadingIndex] = imageUrl;
+        }
         return { ...s, gallery };
       }));
-    };
-    if (file) reader.readAsDataURL(file);
+    } else {
+      // Удаляем индикатор загрузки если загрузка не удалась
+      setSections(sections => sections.map((s, i) => {
+        if (i !== idx) return s;
+        const gallery = Array.isArray(s.gallery) ? s.gallery.filter(img => img !== 'loading...') : [];
+        return { ...s, gallery };
+      }));
+    }
   }
 
   function handleDeleteGalleryImage(idx, imgIdx) {
@@ -324,8 +374,26 @@ export default function AdminPanel() {
                 <div style={{ display: 'flex', gap: 12 }}>
                   {s.gallery && s.gallery.map((img, imgIdx) => (
                     <div key={imgIdx} style={{ position: 'relative' }}>
-                      <img src={img} alt="gallery" style={{ maxWidth: 120, maxHeight: 80, borderRadius: 8, marginBottom: 4 }} />
-                      <button onClick={() => handleDeleteGalleryImage(i, imgIdx)} style={{ position: 'absolute', top: 0, right: 0, background: '#fff', color: '#d00', border: '1px solid #d00', borderRadius: '50%', width: 22, height: 22, fontSize: 14, cursor: 'pointer', lineHeight: 1, padding: 0 }}>×</button>
+                      {img === 'loading...' ? (
+                        <div style={{ 
+                          width: 120, 
+                          height: 80, 
+                          borderRadius: 8, 
+                          border: '2px dashed #ccc', 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          justifyContent: 'center',
+                          fontSize: 14,
+                          color: '#666'
+                        }}>
+                          Загрузка...
+                        </div>
+                      ) : (
+                        <img src={img.startsWith('/') ? img : img} alt="gallery" style={{ maxWidth: 120, maxHeight: 80, borderRadius: 8, marginBottom: 4 }} />
+                      )}
+                      {img !== 'loading...' && (
+                        <button onClick={() => handleDeleteGalleryImage(i, imgIdx)} style={{ position: 'absolute', top: 0, right: 0, background: '#fff', color: '#d00', border: '1px solid #d00', borderRadius: '50%', width: 22, height: 22, fontSize: 14, cursor: 'pointer', lineHeight: 1, padding: 0 }}>×</button>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -334,7 +402,26 @@ export default function AdminPanel() {
               <>
                 <label style={{ fontWeight: 600 }}>Фото</label>
                 <input type="file" accept="image/*" onChange={e => handleImage(i, e.target.files[0])} style={{ display: 'block', margin: '8px 0 16px 0' }} />
-                {s.image && <img src={s.image} alt="preview" style={{ maxWidth: 180, maxHeight: 120, borderRadius: 8, marginBottom: 8 }} />}
+                {s.image && (
+                  s.image === 'loading...' ? (
+                    <div style={{ 
+                      width: 180, 
+                      height: 120, 
+                      borderRadius: 8, 
+                      border: '2px dashed #ccc', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center',
+                      fontSize: 16,
+                      color: '#666',
+                      marginBottom: 8
+                    }}>
+                      Загрузка изображения...
+                    </div>
+                  ) : (
+                    <img src={s.image.startsWith('/') ? s.image : s.image} alt="preview" style={{ maxWidth: 180, maxHeight: 120, borderRadius: 8, marginBottom: 8 }} />
+                  )
+                )}
               </>
             )}
           </div>
