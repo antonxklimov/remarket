@@ -1243,9 +1243,8 @@ hr, .hero-block__secondary-hr {
   overflow-wrap: break-word !important;
   word-wrap: break-word !important;
   word-break: normal !important;
-  hyphens: auto !important;
+  hyphens: none !important;
   white-space: normal !important;
-  /* Висячие союзы и предлоги */
   text-wrap: balance !important;
 }
 
@@ -1283,11 +1282,6 @@ hr, .hero-block__secondary-hr {
   text-align: left;
   word-spacing: 0.05em;
   line-height: 1.6;
-  /* Правильные переносы для русского языка */
-  hyphenate-character: "-";
-  hyphenate-limit-chars: 6 3 3;
-  hyphenate-limit-lines: 2;
-  hyphenate-limit-zone: 8%;
 }
 
 
@@ -1315,7 +1309,7 @@ hr, .hero-block__secondary-hr {
   word-wrap: break-word !important;
   overflow-wrap: break-word !important;
   word-break: normal !important;
-  white-space: pre-wrap !important;
+  white-space: normal !important;
 }
 
 /* Ограничение ширины для контейнеров секций */
@@ -1332,7 +1326,7 @@ hr, .hero-block__secondary-hr {
   max-width: 100% !important;
   overflow-wrap: break-word !important;
   word-break: normal !important;
-  white-space: pre-wrap !important;
+  white-space: normal !important;
 }
 
 /* Обработка длинных URL и ссылок */
@@ -1359,7 +1353,7 @@ hr, .hero-block__secondary-hr {
   word-wrap: break-word !important;
   overflow-wrap: break-word !important;
   word-break: normal !important;
-  white-space: pre-wrap !important;
+  white-space: normal !important;
 }
 
 /* Обработка контейнеров с inline-стилями */
@@ -1402,7 +1396,7 @@ hr, .hero-block__secondary-hr {
   top: 24px;
   right: 48px;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 700;
   color: #000;
   z-index: 1000;
@@ -1413,7 +1407,7 @@ hr, .hero-block__secondary-hr {
 }
 
 .fixed-date-desktop .date-arrow {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 700;
   color: #000;
   display: block;
