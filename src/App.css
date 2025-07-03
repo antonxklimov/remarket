@@ -557,16 +557,20 @@ html {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  padding: 32px 48px;
+  padding: 24px 48px 32px 48px;
   box-sizing: border-box;
-  scroll-snap-align: start;
   position: relative;
+}
+
+/* Первая секция (hero) может быть выше остальных */
+.fullscreen-section:first-child {
+  min-height: auto;
 }
 
 body, .layout {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   background: #fff;
-  color: rgba(0,0,0,0.85);
+  color: #000;
 }
 
 body {
@@ -797,7 +801,7 @@ h1, .hero-block__title, .hero-block__secondary-title {
   font-weight: 900;
   margin: 0;
   line-height: 1;
-  color: rgba(0,0,0,0.85);
+  color: #000;
   letter-spacing: 0em;
 }
 .hero-block__title {
@@ -945,22 +949,18 @@ hr, .hero-block__secondary-hr {
   font-size: 2.8rem;
   font-weight: 800;
   line-height: 1;
-  color: rgba(0,0,0,0.85);
-  font-family: "Diatype Variable", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #000;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   letter-spacing: 0em;
 }
 
 /* Специальные классы для больших заголовков */
-.main-content-inner h1.large-title {
-  font-size: 13rem !important;
-  font-weight: 700 !important;
-  line-height: 0.9 !important;
-}
 
 .main-content-inner h1.hero-title {
-  font-size: 5.5rem !important;
+  font-size: 8rem !important;
   font-weight: 700 !important;
-  line-height: 0.9 !important;
+  line-height: 1.1 !important;
+  padding-top: 0 !important;
 }
 
 @media (max-width: 900px) {
@@ -992,12 +992,11 @@ hr, .hero-block__secondary-hr {
   }
   
   /* Мобильные версии больших заголовков */
-  .main-content-inner h1.large-title {
-    font-size: 7rem !important;
-  }
   
   .main-content-inner h1.hero-title {
-    font-size: 3.5rem !important;
+    font-size: 5rem !important;
+    padding-top: 0 !important;
+    line-height: 1.1 !important;
   }
   .hero-block__caption,
   .main-content-inner p {
@@ -1137,7 +1136,7 @@ hr, .hero-block__secondary-hr {
 }
 .mobile-menu-list-minimal li::marker {
   font-size: 2.8rem;
-  color: rgba(0,0,0,0.85);
+  color: #000;
   margin-right: 0.3em;
   transition: filter 0.25s;
 }
@@ -1145,13 +1144,14 @@ hr, .hero-block__secondary-hr {
   filter: blur(2px);
 }
 .mobile-menu-list-minimal a {
-  color: rgba(0,0,0,0.85);
+  color: #000;
   text-decoration: none;
   font-size: 2.8rem;
   font-weight: 400;
   transition: filter 0.25s;
   position: relative;
   overflow: hidden;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 .mobile-menu-list-minimal a:hover {
   color: #111;
@@ -1174,19 +1174,21 @@ hr, .hero-block__secondary-hr {
 .mobile-menu-links-minimal {
   margin-bottom: 0;
   font-size: 2.8rem;
-  color: rgba(0,0,0,0.85);
+  color: #000;
   font-weight: 400;
   line-height: 1.0;
   padding: 0 24px;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 .mobile-menu-links-minimal a {
-  color: rgba(0,0,0,0.85);
+  color: #000;
   text-decoration: none;
   font-size: 2.8rem;
   font-weight: 400;
   display: block;
   margin-bottom: 3px;
   transition: filter 0.25s;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 .mobile-menu-links-minimal a:hover {
   color: #000;
@@ -1201,9 +1203,10 @@ hr, .hero-block__secondary-hr {
 
 .mobile-menu-copyright-minimal {
   font-size: 1.2rem;
-  color: rgba(0,0,0,0.75);
+  color: #000;
   text-align: left;
   padding: 8px 24px 24px 24px;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 .mobile-menu-copyright-minimal .sidebar__studio-link {
   color: inherit;
@@ -1224,7 +1227,9 @@ hr, .hero-block__secondary-hr {
 }
 
 .main-content-inner p {
-  font-size: 2.2rem;
+  font-size: 2.0rem;
+  color: #000;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 /* Правильная типографика для текста */
@@ -1237,6 +1242,7 @@ hr, .hero-block__secondary-hr {
   box-sizing: border-box !important;
   overflow-wrap: break-word !important;
   word-wrap: break-word !important;
+  word-break: normal !important;
   hyphens: auto !important;
   white-space: normal !important;
   /* Висячие союзы и предлоги */
@@ -1244,12 +1250,12 @@ hr, .hero-block__secondary-hr {
 }
 
 /* Специальные правила для заголовков */
-.main-content-inner h1.large-title,
 .main-content-inner h1.hero-title {
   text-wrap: balance !important;
   word-break: normal !important;
   hyphens: none !important;
   white-space: normal !important;
+  overflow-wrap: normal !important;
 }
 
 /* Обработка длинных URL и ссылок */
@@ -1277,7 +1283,14 @@ hr, .hero-block__secondary-hr {
   text-align: left;
   word-spacing: 0.05em;
   line-height: 1.6;
+  /* Правильные переносы для русского языка */
+  hyphenate-character: "-";
+  hyphenate-limit-chars: 6 3 3;
+  hyphenate-limit-lines: 2;
+  hyphenate-limit-zone: 8%;
 }
+
+
 
 /* Правильные переносы для заголовков */
 .main-content-inner h1,
@@ -1301,7 +1314,7 @@ hr, .hero-block__secondary-hr {
   max-width: 100% !important;
   word-wrap: break-word !important;
   overflow-wrap: break-word !important;
-  word-break: break-all !important;
+  word-break: normal !important;
   white-space: pre-wrap !important;
 }
 
@@ -1318,13 +1331,13 @@ hr, .hero-block__secondary-hr {
 .main-content-inner [dangerouslySetInnerHTML] * {
   max-width: 100% !important;
   overflow-wrap: break-word !important;
-  word-break: break-all !important;
+  word-break: normal !important;
   white-space: pre-wrap !important;
 }
 
 /* Обработка длинных URL и ссылок */
 .main-content-inner a {
-  word-break: break-all !important;
+  word-break: break-word !important;
   overflow-wrap: break-word !important;
   max-width: 100% !important;
 }
@@ -1345,7 +1358,7 @@ hr, .hero-block__secondary-hr {
   max-width: 100% !important;
   word-wrap: break-word !important;
   overflow-wrap: break-word !important;
-  word-break: break-all !important;
+  word-break: normal !important;
   white-space: pre-wrap !important;
 }
 
@@ -1354,5 +1367,66 @@ hr, .hero-block__secondary-hr {
   max-width: 100% !important;
   word-wrap: break-word !important;
   overflow-wrap: break-word !important;
-  word-break: break-all !important;
+  word-break: normal !important;
+}
+
+/* Анимированное слово */
+.animated-word {
+  display: inline-block;
+  white-space: nowrap;
+  vertical-align: baseline;
+  min-width: 1em;
+  text-align: left;
+  font-style: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* Обычные заголовки секций */
+.section-title {
+  font-size: 5rem !important;
+}
+
+@media (max-width: 900px) {
+  .section-title {
+    font-size: 3rem !important;
+  }
+}
+
+/* Фиксированная дата в верхней правой части экрана */
+.fixed-date-desktop {
+  position: fixed;
+  top: 24px;
+  right: 48px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #000;
+  z-index: 1000;
+  text-align: right;
+  line-height: 1.2;
+  pointer-events: none;
+  user-select: none;
+}
+
+.fixed-date-desktop .date-arrow {
+  font-size: 18px;
+  font-weight: 700;
+  color: #000;
+  display: block;
+  margin-top: 4px;
+  margin-left: 24px;
+}
+
+@media (max-width: 900px) {
+  .section-title {
+    font-size: 3rem !important;
+  }
+  
+  .fixed-date-desktop {
+    display: none;
+  }
 }

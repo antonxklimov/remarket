@@ -4,12 +4,11 @@ export const defaultSections = [
     id: 'hero',
     title: 'RE→MARKET',
     text: 'Фестиваль локальных брендов в Москве. Встречаемся 3 августа 2025 года в самом сердце города.',
-    image: '',
-    largeTitle: true
+    image: ''
   },
   {
     id: 'praese-vita',
-    title: 'Praese Vita',
+    title: 'Локация',
     text: 'Vivamus semper varius risus, a congue lectus pharetra id. Cras dapibus tortor ac cursus aliquet. Quisque dui ante, convallis eget fermentum vitae, blandit eu ipsum. Aenean vel ligula ut enim dignissim volutpat. Proin quis ullamcorper odio, eget pretium arcu. Phasellus eu sem mollis, mollis nibh ac, venenatis ante. Phasellus eu risus id nunc lacinia ornare eget varius metus.',
     image: ''
   },

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useLayoutEffect } from 'react'
 import Header from './components/Header'
 import Sidebar from './components/Sidebar'
+import AnimatedWord from './components/AnimatedWord'
 import './App.css'
 import { defaultSections } from './sectionsData'
 import SwiperGallery from './components/SwiperGallery'
@@ -13,9 +14,21 @@ function scrollToSection(e, id) {
   const target = document.getElementById(id);
   
   if (mainContent && target) {
-    // Для fullscreen секций просто скроллим к началу секции
-    const offset = target.offsetTop;
-    mainContent.scrollTo({ top: offset, behavior: 'smooth' });
+    // Сбрасываем текущий скролл для правильного расчета
+    const currentScrollTop = mainContent.scrollTop;
+    
+    // Получаем позицию элемента относительно его родителя
+    const targetRect = target.getBoundingClientRect();
+    const mainContentRect = mainContent.getBoundingClientRect();
+    
+    // Вычисляем истинную позицию с учетом текущего скролла
+    const targetPosition = targetRect.top - mainContentRect.top + currentScrollTop;
+    
+    console.log('Scrolling to:', id, 'targetPosition:', targetPosition);
+    mainContent.scrollTo({ 
+      top: targetPosition, 
+      behavior: 'smooth' 
+    });
   }
 }
 
@@ -137,6 +150,16 @@ function App() {
     return (
       <div className="layout">
         <Sidebar onMenuClick={scrollToSection} sections={visibleSections} />
+        
+        {/* Фиксированная дата в верхней правой части экрана */}
+        <div className="fixed-date-desktop" style={{
+          transform: `scale(${scale})`,
+          transformOrigin: 'top right'
+        }}>
+          → 3 августа 2025<br />
+          <span className="date-arrow">стрелка</span>
+        </div>
+        
         <main className="main-content">
           <div
             className="main-content-inner"
@@ -159,11 +182,14 @@ function App() {
               const availableHeight = (100 / scale) * (window.innerHeight / 100);
               
               // Правильный расчет размеров для каждой секции
-              const headerHeight = section.largeTitle ? (i === 0 ? 160 : 220) : 100; // Больше места для первой секции
+              const headerHeight = i === 0 ? 150 : 100; // Заголовок и дата вертикально для первой секции (уменьшен для 8rem)
               const textHeight = 140; // Увеличено для более крупного текста
-              const margins = i === 0 ? 64 : 48; // Больше отступов для первой секции
+              const margins = 48; // Одинаковые отступы для всех секций
               
-              const imageHeight = Math.max(200, availableHeight - headerHeight - textHeight - margins);
+              // Для hero-секции используем фиксированный большой размер изображения
+              const imageHeight = i === 0 
+                ? 600 // Фиксированно 600px для hero-секции - это должно сделать секцию выше экрана
+                : Math.max(200, availableHeight - headerHeight - textHeight - margins);
               
               return (
                 <section
@@ -172,69 +198,53 @@ function App() {
                   ref={i === 0 ? firstSectionRef : undefined}
                   className="fullscreen-section"
                   style={{
-                    height: `${100 / scale}vh`,
-                    minHeight: `${100 / scale}vh`,
+                    height: i === 0 ? 'auto' : `${100 / scale}vh`, // Автоматическая высота для hero-секции
+                    minHeight: i === 0 ? 'auto' : `${100 / scale}vh`, // Убираем минимальную высоту для hero-секции
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'flex-start'
                   }}>
-                  {/* Header с заголовком и датой */}
-                  <div style={{ 
-                    position: 'relative', 
-                    width: '100%', 
-                    marginBottom: i === 0 ? '32px' : '16px', // Больше отступ для первой секции
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'flex-start',
-                    height: `${headerHeight}px`,
-                    flexShrink: 0
-                  }}>
-                    {section.largeTitle ? (
-                      // Большой заголовок (11rem или Hero для первой секции)
+                  {i === 0 ? (
+                    // Специальная структура для первой секции - заголовок и дата вертикально
+                    <div style={{ 
+                      width: '100%',
+                      marginBottom: '32px',
+                      flexShrink: 0
+                    }}>
                       <h1 
-                        className={i === 0 ? 'hero-title' : 'large-title'}
+                        className="hero-title"
                         style={{
                           margin: 0,
+                          marginBottom: '16px',
                           textAlign: 'left',
-                          color: 'rgba(0,0,0,0.9)',
-                          fontFamily: '"Diatype Variable", "Helvetica Neue", Helvetica, Arial, sans-serif',
-                          flex: 1
+                          color: '#000',
+                          fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif'
                         }}
                       >
-                        {i === 0 ? 'Пятый фестиваль локальных брендов RE→MARKET' : section.title}
+                        <AnimatedWord /><br />фестиваль локальных брендов RE→MARKET
                       </h1>
-                    ) : (
-                      // Обычный заголовок секции
-                      <h1 style={{
-                        fontSize: '2.2rem',
+                    </div>
+                  ) : (
+                    // Header для остальных секций
+                    <div style={{ 
+                      position: 'relative', 
+                      width: '100%', 
+                      marginBottom: '16px',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'flex-start',
+                      height: `${headerHeight}px`,
+                      flexShrink: 0
+                    }}>
+                      <h1 className="section-title" style={{
+                        fontSize: '3.5rem',
                         margin: 0, 
-                        flex: 1
+                        flex: 1,
+                        color: '#000',
+                        fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif'
                       }}>{section.title}</h1>
-                    )}
-                    {i === 0 && (
-                      <div
-                        ref={dateRef}
-                        className="market-date"
-                        style={{
-                          fontWeight: 700,
-                          fontSize: 22,
-                          color: '#222',
-                          background: 'none',
-                          padding: 0,
-                          borderRadius: 0,
-                          zIndex: 2,
-                          transition: 'opacity 0.3s, filter 0.3s',
-                          pointerEvents: 'auto',
-                          filter: 'none',
-                          opacity: 1,
-                          marginLeft: '24px',
-                          flexShrink: 0
-                        }}
-                      >
-                        → 3 августа 2025
-                      </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
                   
                   {/* Основной контент - изображение занимает оставшееся пространство */}
                   <div 
@@ -246,7 +256,7 @@ function App() {
                       marginBottom: '16px',
                       height: `${imageHeight}px`,
                       width: '100%',
-                      flex: 1
+                      flex: i === 0 ? 'none' : 1 // Убираем flex: 1 для hero-секции
                     }}>
                     {section.galleryEnabled && section.gallery && section.gallery.length > 0 ? (
                       <SwiperGallery images={section.gallery} height={imageHeight} />
@@ -268,25 +278,28 @@ function App() {
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          color: '#999',
-                          fontSize: '1.2rem'
+                          color: '#000',
+                          fontSize: '1.2rem',
+                          fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif'
                         }}>
                         Изображение
                       </div>
                     )}
                   </div>
                   
-                  {/* Текст - компактная полоска внизу */}
+                  {/* Текст - без скролла, адаптивная высота */}
                   <div
                     style={{
-                      fontSize: '2.2rem', 
-                      color: '#444', 
+                      fontSize: '2.0rem', 
+                      color: '#000', 
                       lineHeight: 1.5,
-                      height: `${textHeight}px`,
-                      overflow: 'auto',
+                      minHeight: `${Math.min(textHeight, 120)}px`,
+                      maxHeight: `${textHeight}px`,
+                      overflow: 'hidden',
                       padding: '16px 0',
                       boxSizing: 'border-box',
-                      flexShrink: 0
+                      flexShrink: 0,
+                      fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif'
                     }}
                     dangerouslySetInnerHTML={{ __html: section.text }}
                   />
@@ -332,7 +345,7 @@ function App() {
         {/* Контент секций */}
         {visibleSections.map((section, i) => {
           // Простые размеры для мобильных
-          const imageHeight = windowWidth <= 600 ? 250 : 350;
+          const imageHeight = windowWidth <= 600 ? 600 : 350;
           const textSize = 1.8; // Увеличено для лучшей читаемости на мобильных
           
           return (
@@ -344,69 +357,54 @@ function App() {
               marginBottom: '40px',
               padding: `${i === 0 ? '0' : '40px'} 0 16px 0`
             }}>
-            <div style={{ position: 'relative', width: '100%', maxWidth: '100%', marginBottom: 24, boxSizing: 'border-box' }}>
-              {section.largeTitle ? (
-                // Большой заголовок для мобильных
+            {i === 0 ? (
+              // Специальная структура для первой секции на мобильных
+              <div style={{ width: '100%', marginBottom: 24, boxSizing: 'border-box' }}>
                 <h1 
-                  className={i === 0 ? 'hero-title' : 'large-title'}
+                  className="hero-title"
                   style={{
-                    marginBottom: i === 0 ? '32px' : '24px', // Больше отступ для первой секции
-                    color: 'rgba(0,0,0,0.9)',
-                    fontFamily: '"Diatype Variable", "Helvetica Neue", Helvetica, Arial, sans-serif'
+                    marginBottom: '16px',
+                    color: '#000',
+                    fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif'
                   }}
                 >
-                  {i === 0 ? 'Пятый фестиваль локальных брендов RE→MARKET' : section.title}
+                  <AnimatedWord /><br />фестиваль локальных брендов RE→MARKET
                 </h1>
+              </div>
+            ) : (
+              // Обычная структура для остальных секций
+              <div style={{ position: 'relative', width: '100%', maxWidth: '100%', marginBottom: 24, boxSizing: 'border-box' }}>
+                <h1 className="section-title" style={{
+                  fontSize: '2.5rem', 
+                  marginBottom: '24px',
+                  color: '#000',
+                  fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif'
+                }}>{section.title}</h1>
+              </div>
+            )}
+            <div style={{ 
+              height: `${imageHeight}px`,
+              width: '100%',
+              marginBottom: '16px'
+            }}>
+              {section.galleryEnabled && section.gallery && section.gallery.length > 0 ? (
+                <SwiperGallery images={section.gallery} height={imageHeight} />
+              ) : section.image && section.image.trim() !== '' ? (
+                <img src={section.image} alt="section" style={{width: '100%', height: '100%', objectFit: 'cover', borderRadius: 8}} />
               ) : (
-                // Обычный заголовок секции
-                <h1 style={{fontSize: '2.2rem', marginBottom: '24px'}}>{section.title}</h1>
-              )}
-              {i === 0 && (
-                <div
-                  ref={dateRef}
-                  className="market-date"
-                  style={{
-                    position: 'static', // Изменено с absolute на static
-                    fontWeight: 700,
-                    fontSize: 22,
-                    color: '#222',
-                    background: 'none',
-                    padding: 0,
-                    borderRadius: 0,
-                    zIndex: 2,
-                    transition: 'opacity 0.3s, filter 0.3s',
-                    pointerEvents: 'auto',
-                    filter: 'none',
-                    opacity: 1,
-                    marginBottom: '32px' // Больше отступ для первой секции
-                  }}
-                >
-                  → 3 августа 2025
+                <div style={{width: '100%', height: '100%', background: '#f5f5f5', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#000', fontSize: '1.2rem', fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif'}}>
+                  Изображение
                 </div>
               )}
-              <div style={{ 
-                height: `${imageHeight}px`,
-                width: '100%',
-                marginBottom: '16px'
-              }}>
-                {section.galleryEnabled && section.gallery && section.gallery.length > 0 ? (
-                  <SwiperGallery images={section.gallery} height={imageHeight} />
-                ) : section.image && section.image.trim() !== '' ? (
-                  <img src={section.image} alt="section" style={{width: '100%', height: '100%', objectFit: 'cover', borderRadius: 8}} />
-                ) : (
-                  <div style={{width: '100%', height: '100%', background: '#f5f5f5', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#999', fontSize: '1.2rem'}}>
-                    Изображение
-                  </div>
-                )}
-              </div>
             </div>
             <div
               style={{
                 fontSize: `${textSize}rem`, 
-                color: '#444', 
+                color: '#000', 
                 marginBottom: '16px', 
                 height: 'auto', // Автоматическая высота для мобильных
-                overflow: 'visible' // Убираем скролл для мобильных
+                overflow: 'visible', // Убираем скролл для мобильных
+                fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif'
               }}
               dangerouslySetInnerHTML={{ __html: section.text }}
             />

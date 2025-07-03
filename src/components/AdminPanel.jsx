@@ -60,7 +60,6 @@ export default function AdminPanel() {
             ...s,
             galleryEnabled: s.galleryEnabled ?? false, 
             gallery: s.gallery ?? [], 
-            largeTitle: s.largeTitle ?? false, 
             editorState 
           };
         });
@@ -92,7 +91,6 @@ export default function AdminPanel() {
             ...s,
             galleryEnabled: s.galleryEnabled ?? false, 
             gallery: s.gallery ?? [], 
-            largeTitle: s.largeTitle ?? false, 
             editorState 
           };
         });
@@ -201,7 +199,6 @@ export default function AdminPanel() {
         title: 'Новая секция',
         text: '',
         image: '',
-        largeTitle: false,
         galleryEnabled: false,
         gallery: [],
         editorState: EditorState.createEmpty(),
@@ -303,25 +300,62 @@ export default function AdminPanel() {
       alignItems: 'center',
       justifyContent: 'flex-start',
     }}>
-      <div style={{ maxWidth: 600, width: '100%', margin: '40px auto', background: '#fff', borderRadius: 12, boxShadow: '0 2px 12px #0001', padding: 32, fontFamily: 'Helvetica Neue', color: '#111' }}>
-        <h1 style={{ fontSize: 32, marginBottom: 32 }}>Редактирование секций</h1>
+      <div style={{ maxWidth: 800, width: '100%', margin: '40px auto', background: '#f8f9fa', borderRadius: 16, padding: 40, fontFamily: 'Helvetica Neue', color: '#000' }}>
+        <div style={{ background: '#fff', borderRadius: 12, padding: 32, marginBottom: 32, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+          <h1 style={{ fontSize: 36, marginBottom: 8, fontWeight: 700 }}>Админка RE→MARKET</h1>
+          <p style={{ fontSize: 16, color: '#666', margin: 0 }}>Управление контентом и секциями сайта</p>
+        </div>
         {sections.map((s, i) => (
-          <div key={s.id} style={{ marginBottom: 32, borderBottom: '1px solid #eee', paddingBottom: 24 }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-              <label style={{ fontWeight: 600, fontSize: 18, flex: 1 }}>Название секции</label>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                {/* Кнопки перемещения */}
+          <div key={s.id} style={{ 
+            background: '#fff', 
+            borderRadius: 12, 
+            padding: 32, 
+            marginBottom: 24, 
+            boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+            border: '1px solid #e9ecef'
+          }}>
+            {/* Заголовок секции */}
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'space-between', 
+              marginBottom: 24,
+              paddingBottom: 16,
+              borderBottom: '1px solid #f1f3f4'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                <span style={{ 
+                  background: '#000', 
+                  color: '#fff', 
+                  borderRadius: '50%', 
+                  width: 32, 
+                  height: 32, 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  fontSize: 14,
+                  fontWeight: 600
+                }}>
+                  {i + 1}
+                </span>
+                <h3 style={{ margin: 0, fontSize: 20, fontWeight: 600 }}>
+                  {s.title || 'Новая секция'}
+                </h3>
+              </div>
+              
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <button 
                   onClick={() => handleMoveUp(i)} 
                   disabled={i === 0}
                   style={{ 
-                    background: '#fff', 
-                    color: i === 0 ? '#ccc' : '#222', 
-                    border: '1px solid #ccc', 
-                    borderRadius: 6, 
-                    padding: '4px 8px', 
-                    fontSize: 14, 
-                    cursor: i === 0 ? 'not-allowed' : 'pointer' 
+                    background: i === 0 ? '#f8f9fa' : '#fff', 
+                    color: i === 0 ? '#adb5bd' : '#000', 
+                    border: '1px solid #e9ecef', 
+                    borderRadius: 8, 
+                    padding: '8px 12px', 
+                    fontSize: 16, 
+                    cursor: i === 0 ? 'not-allowed' : 'pointer',
+                    transition: 'all 0.2s'
                   }}
                   title="Переместить вверх"
                 >
@@ -331,117 +365,301 @@ export default function AdminPanel() {
                   onClick={() => handleMoveDown(i)} 
                   disabled={i === sections.length - 1}
                   style={{ 
-                    background: '#fff', 
-                    color: i === sections.length - 1 ? '#ccc' : '#222', 
-                    border: '1px solid #ccc', 
-                    borderRadius: 6, 
-                    padding: '4px 8px', 
-                    fontSize: 14, 
-                    cursor: i === sections.length - 1 ? 'not-allowed' : 'pointer' 
+                    background: i === sections.length - 1 ? '#f8f9fa' : '#fff', 
+                    color: i === sections.length - 1 ? '#adb5bd' : '#000', 
+                    border: '1px solid #e9ecef', 
+                    borderRadius: 8, 
+                    padding: '8px 12px', 
+                    fontSize: 16, 
+                    cursor: i === sections.length - 1 ? 'not-allowed' : 'pointer',
+                    transition: 'all 0.2s'
                   }}
                   title="Переместить вниз"
                 >
                   ↓
                 </button>
-                <label style={{ fontSize: 15, display: 'flex', alignItems: 'center', cursor: 'pointer', userSelect: 'none' }}>
-                  <input type="checkbox" checked={!!s.hidden} onChange={() => handleToggleHidden(i)} style={{ marginRight: 6 }} />
+                <button 
+                  onClick={() => handleDeleteSection(i)} 
+                  style={{ 
+                    background: '#fff', 
+                    color: '#dc3545', 
+                    border: '1px solid #dc3545', 
+                    borderRadius: 8, 
+                    padding: '8px 16px', 
+                    fontSize: 14, 
+                    cursor: 'pointer',
+                    transition: 'all 0.2s'
+                  }}
+                >
+                  Удалить
+                </button>
+              </div>
+            </div>
+            {/* Блок настроек секции */}
+            <div style={{ 
+              background: '#f8f9fa', 
+              borderRadius: 8, 
+              padding: 24, 
+              marginBottom: 24 
+            }}>
+              <h4 style={{ margin: '0 0 16px 0', fontSize: 16, fontWeight: 600 }}>Настройки секции</h4>
+              
+              <div style={{ marginBottom: 20 }}>
+                <label style={{ fontWeight: 600, fontSize: 14, display: 'block', marginBottom: 8 }}>
+                  Название секции
+                </label>
+                <input 
+                  value={s.title} 
+                  onChange={e => handleChange(i, 'title', e.target.value)} 
+                  style={{ 
+                    width: '100%', 
+                    fontSize: 16, 
+                    padding: '12px 16px', 
+                    borderRadius: 8, 
+                    border: '1px solid #e9ecef', 
+                    background: '#fff', 
+                    color: '#000', 
+                    fontFamily: 'Helvetica Neue',
+                    transition: 'border-color 0.2s'
+                  }} 
+                  placeholder="Введите название секции"
+                />
+              </div>
+              
+              <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
+                <label style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: 8, 
+                  fontSize: 14, 
+                  cursor: 'pointer', 
+                  userSelect: 'none' 
+                }}>
+                  <input 
+                    type="checkbox" 
+                    checked={!!s.hidden} 
+                    onChange={() => handleToggleHidden(i)} 
+                    style={{ 
+                      width: 16, 
+                      height: 16, 
+                      accentColor: '#000' 
+                    }} 
+                  />
                   Скрыть секцию
                 </label>
-                <button onClick={() => handleDeleteSection(i)} style={{ background: '#fff', color: '#d00', border: '1px solid #d00', borderRadius: 6, padding: '4px 12px', fontSize: 14, cursor: 'pointer' }}>Удалить</button>
               </div>
             </div>
-            <input value={s.title} onChange={e => handleChange(i, 'title', e.target.value)} style={{ width: '100%', fontSize: 18, margin: '0 0 8px 0', padding: 8, borderRadius: 6, border: '1px solid #ccc', background: '#fff', color: '#111', fontFamily: 'Helvetica Neue' }} />
-            <label style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8, margin: '0 0 16px 0' }}>
-              <input type="checkbox" checked={!!s.largeTitle} onChange={e => handleChange(i, 'largeTitle', e.target.checked)} style={{ marginRight: 6 }} />
-              Большой заголовок (11rem)
-            </label>
-            <label style={{ fontWeight: 600 }}>Текст</label>
-            <div style={{ border: 'none', borderRadius: 6, margin: '8px 0 16px 0', background: '#fff' }}>
-              <Editor
-                editorState={s.editorState}
-                onEditorStateChange={editorState => handleEditorChange(i, editorState)}
-                toolbar={{ options: ['inline', 'list', 'link', 'history'], inline: { options: ['bold', 'italic', 'underline'] } }}
-                editorStyle={{ minHeight: 80, padding: 8, fontSize: 16, background: '#fff' }}
-              />
+            
+            {/* Блок редактирования контента */}
+            <div style={{ marginBottom: 24 }}>
+              <label style={{ fontWeight: 600, fontSize: 14, display: 'block', marginBottom: 8 }}>
+                Текст секции
+              </label>
+              <div style={{ border: '1px solid #e9ecef', borderRadius: 8, background: '#fff' }}>
+                <Editor
+                  editorState={s.editorState}
+                  onEditorStateChange={editorState => handleEditorChange(i, editorState)}
+                  toolbar={{ options: ['inline', 'list', 'link', 'history'], inline: { options: ['bold', 'italic', 'underline'] } }}
+                  editorStyle={{ minHeight: 80, padding: 8, fontSize: 16, background: '#fff' }}
+                />
+              </div>
             </div>
-            <label style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}>
-              <input type="checkbox" checked={!!s.galleryEnabled} onChange={e => handleChange(i, 'galleryEnabled', e.target.checked)} style={{ marginRight: 6 }} />
-              Включить галерею (до 3 фото)
-            </label>
-            {s.galleryEnabled ? (
-              <div style={{ margin: '8px 0 16px 0' }}>
-                <GalleryInput idx={i} gallery={s.gallery} onAdd={handleGalleryImage} disabled={s.gallery && s.gallery.length >= 3} />
-                <div style={{ display: 'flex', gap: 12 }}>
-                  {s.gallery && s.gallery.map((img, imgIdx) => (
-                    <div key={imgIdx} style={{ position: 'relative' }}>
-                      {img === 'loading...' ? (
-                        <div style={{ 
-                          width: 120, 
-                          height: 80, 
-                          borderRadius: 8, 
-                          border: '2px dashed #ccc', 
-                          display: 'flex', 
-                          alignItems: 'center', 
-                          justifyContent: 'center',
-                          fontSize: 14,
-                          color: '#666'
-                        }}>
-                          Загрузка...
-                        </div>
-                      ) : (
-                        <img src={img.startsWith('/') ? img : img} alt="gallery" style={{ maxWidth: 120, maxHeight: 80, borderRadius: 8, marginBottom: 4 }} />
-                      )}
-                      {img !== 'loading...' && (
-                        <button onClick={() => handleDeleteGalleryImage(i, imgIdx)} style={{ position: 'absolute', top: 0, right: 0, background: '#fff', color: '#d00', border: '1px solid #d00', borderRadius: '50%', width: 22, height: 22, fontSize: 14, cursor: 'pointer', lineHeight: 1, padding: 0 }}>×</button>
-                      )}
-                    </div>
-                  ))}
+            {/* Блок изображений */}
+            <div style={{ 
+              background: '#f8f9fa', 
+              borderRadius: 8, 
+              padding: 24 
+            }}>
+              <h4 style={{ margin: '0 0 16px 0', fontSize: 16, fontWeight: 600 }}>Изображения</h4>
+              
+              <label style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: 8, 
+                fontSize: 14, 
+                cursor: 'pointer', 
+                userSelect: 'none',
+                marginBottom: 20
+              }}>
+                <input 
+                  type="checkbox" 
+                  checked={!!s.galleryEnabled} 
+                  onChange={e => handleChange(i, 'galleryEnabled', e.target.checked)} 
+                  style={{ 
+                    width: 16, 
+                    height: 16, 
+                    accentColor: '#000' 
+                  }} 
+                />
+                Включить галерею (до 3 фото)
+              </label>
+              
+              {s.galleryEnabled ? (
+                <div>
+                  <GalleryInput idx={i} gallery={s.gallery} onAdd={handleGalleryImage} disabled={s.gallery && s.gallery.length >= 3} />
+                  <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                    {s.gallery && s.gallery.map((img, imgIdx) => (
+                      <div key={imgIdx} style={{ position: 'relative', borderRadius: 8, overflow: 'hidden' }}>
+                        {img === 'loading...' ? (
+                          <div style={{ 
+                            width: 120, 
+                            height: 80, 
+                            borderRadius: 8, 
+                            border: '2px dashed #adb5bd', 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            justifyContent: 'center',
+                            fontSize: 14,
+                            color: '#6c757d',
+                            background: '#fff'
+                          }}>
+                            Загрузка...
+                          </div>
+                        ) : (
+                          <img 
+                            src={img.startsWith('/') ? img : img} 
+                            alt="gallery" 
+                            style={{ 
+                              width: 120, 
+                              height: 80, 
+                              objectFit: 'cover', 
+                              borderRadius: 8, 
+                              border: '1px solid #e9ecef' 
+                            }} 
+                          />
+                        )}
+                        {img !== 'loading...' && (
+                          <button 
+                            onClick={() => handleDeleteGalleryImage(i, imgIdx)} 
+                            style={{ 
+                              position: 'absolute', 
+                              top: 4, 
+                              right: 4, 
+                              background: '#fff', 
+                              color: '#dc3545', 
+                              border: '1px solid #dc3545', 
+                              borderRadius: '50%', 
+                              width: 24, 
+                              height: 24, 
+                              fontSize: 14, 
+                              cursor: 'pointer', 
+                              lineHeight: 1, 
+                              padding: 0,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center'
+                            }}
+                          >
+                            ×
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <>
-                <label style={{ fontWeight: 600 }}>Фото</label>
-                <input type="file" accept="image/*" onChange={e => handleImage(i, e.target.files[0])} style={{ display: 'block', margin: '8px 0 16px 0' }} />
-                {s.image && (
-                  s.image === 'loading...' ? (
-                    <div style={{ 
-                      width: 180, 
-                      height: 120, 
-                      borderRadius: 8, 
-                      border: '2px dashed #ccc', 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      justifyContent: 'center',
-                      fontSize: 16,
-                      color: '#666',
-                      marginBottom: 8
-                    }}>
-                      Загрузка изображения...
-                    </div>
-                  ) : (
-                    <img src={s.image.startsWith('/') ? s.image : s.image} alt="preview" style={{ maxWidth: 180, maxHeight: 120, borderRadius: 8, marginBottom: 8 }} />
-                  )
-                )}
-              </>
-            )}
+              ) : (
+                <div>
+                  <label style={{ fontWeight: 600, fontSize: 14, display: 'block', marginBottom: 8 }}>
+                    Одно фото
+                  </label>
+                  <input 
+                    type="file" 
+                    accept="image/*" 
+                    onChange={e => handleImage(i, e.target.files[0])} 
+                    style={{ 
+                      display: 'block', 
+                      marginBottom: 16,
+                      padding: '8px 12px',
+                      border: '1px solid #e9ecef',
+                      borderRadius: 8,
+                      background: '#fff',
+                      fontSize: 14
+                    }} 
+                  />
+                  {s.image && (
+                    s.image === 'loading...' ? (
+                      <div style={{ 
+                        width: 180, 
+                        height: 120, 
+                        borderRadius: 8, 
+                        border: '2px dashed #adb5bd', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center',
+                        fontSize: 16,
+                        color: '#6c757d',
+                        background: '#fff'
+                      }}>
+                        Загрузка изображения...
+                      </div>
+                    ) : (
+                      <img 
+                        src={s.image.startsWith('/') ? s.image : s.image} 
+                        alt="preview" 
+                        style={{ 
+                          width: 180, 
+                          height: 120, 
+                          objectFit: 'cover', 
+                          borderRadius: 8, 
+                          border: '1px solid #e9ecef' 
+                        }} 
+                      />
+                    )
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         ))}
-        <button onClick={handleAddSection} style={{ background: '#fff', color: '#222', fontSize: 18, padding: '12px 32px', border: '1px solid #222', borderRadius: 8, cursor: 'pointer', marginRight: 16 }}>Добавить секцию</button>
-        <button 
-          onClick={handleSave} 
-          disabled={saving}
-          style={{ 
-            background: saving ? '#ccc' : '#222', 
-            color: '#fff', 
-            fontSize: 18, 
-            padding: '12px 32px', 
-            border: 'none', 
-            borderRadius: 8, 
-            cursor: saving ? 'not-allowed' : 'pointer' 
-          }}
-        >
-          {saving ? 'Сохранение...' : 'Сохранить'}
-        </button>
+        <div style={{ 
+          background: '#fff', 
+          borderRadius: 12, 
+          padding: 32, 
+          boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+          border: '1px solid #e9ecef',
+          display: 'flex',
+          gap: 16,
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+          <button 
+            onClick={handleAddSection} 
+            style={{ 
+              background: '#fff', 
+              color: '#000', 
+              fontSize: 16, 
+              padding: '14px 32px', 
+              border: '1px solid #000', 
+              borderRadius: 8, 
+              cursor: 'pointer',
+              fontWeight: 600,
+              transition: 'all 0.2s',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8
+            }}
+          >
+            + Добавить секцию
+          </button>
+          <button 
+            onClick={handleSave} 
+            disabled={saving}
+            style={{ 
+              background: saving ? '#6c757d' : '#000', 
+              color: '#fff', 
+              fontSize: 16, 
+              padding: '14px 32px', 
+              border: 'none', 
+              borderRadius: 8, 
+              cursor: saving ? 'not-allowed' : 'pointer',
+              fontWeight: 600,
+              transition: 'all 0.2s',
+              opacity: saving ? 0.7 : 1
+            }}
+          >
+            {saving ? 'Сохранение...' : 'Сохранить изменения'}
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -461,7 +679,17 @@ function GalleryInput({ idx, gallery, onAdd, disabled }) {
           inputRef.current.value = '';
         }
       }}
-      style={{ display: 'block', marginBottom: 8 }}
+      style={{ 
+        display: 'block', 
+        marginBottom: 16,
+        padding: '8px 12px',
+        border: '1px solid #e9ecef',
+        borderRadius: 8,
+        background: disabled ? '#f8f9fa' : '#fff',
+        fontSize: 14,
+        color: disabled ? '#6c757d' : '#000',
+        cursor: disabled ? 'not-allowed' : 'pointer'
+      }}
     />
   );
 } 

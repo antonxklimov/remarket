@@ -45,8 +45,7 @@ const defaultSections = [
         image: '',
         gallery: [],
         galleryEnabled: false,
-        hidden: false,
-        largeTitle: true
+        hidden: false
     }
 ];
 

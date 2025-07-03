@@ -7,7 +7,8 @@ const Sidebar = ({ onMenuClick, sections }) => {
   const menuSections = sections && sections.length
     ? sections
     : [
-        { id: 'praese-vita', title: 'Praese Vita' },
+        { id: 'hero', title: 'RE→MARKET' },
+        { id: 'praese-vita', title: 'Локация' },
         { id: 'nulla-vehicu-al', title: 'Nulla Vehicu Al' },
         { id: 'ukam-cors', title: 'Ukam Cors' },
         { id: 'dictum-magna', title: 'Dictum Magna' },
@@ -21,13 +22,13 @@ const Sidebar = ({ onMenuClick, sections }) => {
   return (
     <aside className="sidebar" style={{borderRight: 'none'}}>
       <div className="sidebar__title">
-        <img src={Logo} alt="RE→MARKET logo" style={{height: 44, width: 'auto', display: 'block'}} />
+        <img src={Logo} alt="RE→MARKET logo" style={{height: 66, width: 'auto', display: 'block'}} />
       </div>
       <ol className="sidebar__nav">
         {menuSections.map((s, index) => (
           <li key={s.id}>
             <a href={`#${s.id}`} style={{textDecoration: 'none', color: 'inherit', cursor: 'pointer'}} onClick={e => onMenuClick && onMenuClick(e, s.id)}>
-              {index === 0 ? 'О маркете' : s.title}
+              {s.id === 'hero' ? 'О маркете' : s.title}
             </a>
           </li>
         ))}
