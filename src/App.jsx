@@ -5,6 +5,8 @@ import './App.css'
 import { defaultSections } from './sectionsData'
 import SwiperGallery from './components/SwiperGallery'
 
+const API_BASE_URL = 'http://localhost:3001/api';
+
 function scrollToSection(e, id) {
   e.preventDefault();
   const mainContent = document.querySelector('.main-content');
@@ -18,10 +20,8 @@ function scrollToSection(e, id) {
 }
 
 function App() {
-  const [sections, setSections] = useState(() => {
-    const saved = localStorage.getItem('sections');
-    return saved ? JSON.parse(saved) : defaultSections;
-  });
+  const [sections, setSections] = useState(defaultSections);
+  const [loading, setLoading] = useState(true);
   const [scale, setScale] = useState(1);
   const dateRef = useRef();
   const firstSectionRef = useRef();
@@ -42,6 +42,32 @@ function App() {
     const prevTitle = document.title;
     document.title = 'RE→MARKET / 2025';
     return () => { document.title = prevTitle; };
+  }, []);
+
+  // Загрузка данных с API
+  useEffect(() => {
+    async function loadSections() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/data`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setSections(data);
+      } catch (error) {
+        console.error('Ошибка загрузки данных:', error);
+        // Используем localStorage как fallback
+        const saved = localStorage.getItem('sections');
+        if (saved) {
+          setSections(JSON.parse(saved));
+        }
+        // Если ни API, ни localStorage не работают, используем defaultSections
+      } finally {
+        setLoading(false);
+      }
+    }
+    
+    loadSections();
   }, []);
 
   useEffect(() => {
@@ -81,6 +107,28 @@ function App() {
       return () => mainContent.removeEventListener('scroll', handleScroll);
     }
   }, []);
+
+  // Показываем индикатор загрузки
+  if (loading) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        width: '100vw',
+        background: '#fff',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: 18,
+        fontFamily: 'Helvetica Neue',
+        color: '#111',
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: 24, marginBottom: 16 }}>Загрузка...</div>
+          <div style={{ fontSize: 16, color: '#666' }}>RE→MARKET 2025</div>
+        </div>
+      </div>
+    );
+  }
 
   // Только не скрытые секции
   const visibleSections = sections.filter(s => !s.hidden);

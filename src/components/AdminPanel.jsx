@@ -6,7 +6,13 @@ import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
+const API_BASE_URL = 'http://localhost:3001/api';
+
 export default function AdminPanel() {
+  const [sections, setSections] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
   useEffect(() => {
     // Снимаем любые ограничения overflow для body и html
     const prevBodyOverflow = document.body.style.overflow;
@@ -22,36 +28,82 @@ export default function AdminPanel() {
     };
   }, []);
 
-  const [sections, setSections] = useState(() => {
-    const saved = localStorage.getItem('sections');
-    const arr = saved ? JSON.parse(saved) : defaultSections;
-
-    return arr.map(s => {
-      let editorState;
-      if (s.text) {
-        try {
-          const contentBlock = htmlToDraft(s.text);
-          if (contentBlock && contentBlock.contentBlocks) {
-            const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-            editorState = EditorState.createWithContent(contentState);
+  // Загрузка данных с сервера
+  useEffect(() => {
+    async function loadSections() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/data`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        
+        // Добавляем editorState для каждой секции
+        const sectionsWithEditor = data.map(s => {
+          let editorState;
+          if (s.text) {
+            try {
+              const contentBlock = htmlToDraft(s.text);
+              if (contentBlock && contentBlock.contentBlocks) {
+                const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+                editorState = EditorState.createWithContent(contentState);
+              } else {
+                editorState = EditorState.createEmpty();
+              }
+            } catch (e) {
+              editorState = EditorState.createEmpty();
+            }
           } else {
             editorState = EditorState.createEmpty();
           }
-        } catch (e) {
-          editorState = EditorState.createEmpty();
-        }
-      } else {
-        editorState = EditorState.createEmpty();
+          return { 
+            ...s,
+            galleryEnabled: s.galleryEnabled ?? false, 
+            gallery: s.gallery ?? [], 
+            largeTitle: s.largeTitle ?? false, 
+            editorState 
+          };
+        });
+        
+        setSections(sectionsWithEditor);
+      } catch (error) {
+        console.error('Ошибка загрузки данных:', error);
+        alert('Ошибка загрузки данных с сервера. Используются данные по умолчанию.');
+        
+        // Используем данные по умолчанию в случае ошибки
+        const sectionsWithEditor = defaultSections.map(s => {
+          let editorState;
+          if (s.text) {
+            try {
+              const contentBlock = htmlToDraft(s.text);
+              if (contentBlock && contentBlock.contentBlocks) {
+                const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+                editorState = EditorState.createWithContent(contentState);
+              } else {
+                editorState = EditorState.createEmpty();
+              }
+            } catch (e) {
+              editorState = EditorState.createEmpty();
+            }
+          } else {
+            editorState = EditorState.createEmpty();
+          }
+          return { 
+            ...s,
+            galleryEnabled: s.galleryEnabled ?? false, 
+            gallery: s.gallery ?? [], 
+            largeTitle: s.largeTitle ?? false, 
+            editorState 
+          };
+        });
+        setSections(sectionsWithEditor);
+      } finally {
+        setLoading(false);
       }
-      return { 
-        ...s,
-        galleryEnabled: s.galleryEnabled ?? false, 
-        gallery: s.gallery ?? [], 
-        largeTitle: s.largeTitle ?? false, 
-        editorState 
-      };
-    });
-  });
+    }
+    
+    loadSections();
+  }, []);
 
   function handleChange(idx, field, value) {
     setSections(sections => sections.map((s, i) => i === idx ? { ...s, [field]: value } : s));
@@ -133,9 +185,56 @@ export default function AdminPanel() {
     });
   }
 
-  function handleSave() {
-    localStorage.setItem('sections', JSON.stringify(sections.map(({editorState, ...rest}) => rest)));
-    alert('Секции сохранены!');
+  async function handleSave() {
+    setSaving(true);
+    try {
+      const sectionsData = sections.map(({editorState, ...rest}) => rest);
+      
+      const response = await fetch(`${API_BASE_URL}/data`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ sections: sectionsData }),
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const result = await response.json();
+      alert('Данные успешно сохранены на сервере!');
+      
+      // Также сохраняем в localStorage как бэкап
+      localStorage.setItem('sections', JSON.stringify(sectionsData));
+      
+    } catch (error) {
+      console.error('Ошибка сохранения:', error);
+      alert('Ошибка сохранения данных на сервере. Попробуйте еще раз.');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  if (loading) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        width: '100vw',
+        background: '#fff',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: 18,
+        fontFamily: 'Helvetica Neue',
+        color: '#111',
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: 24, marginBottom: 16 }}>Загрузка данных...</div>
+          <div style={{ fontSize: 16, color: '#666' }}>Подключение к серверу</div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -241,7 +340,21 @@ export default function AdminPanel() {
           </div>
         ))}
         <button onClick={handleAddSection} style={{ background: '#fff', color: '#222', fontSize: 18, padding: '12px 32px', border: '1px solid #222', borderRadius: 8, cursor: 'pointer', marginRight: 16 }}>Добавить секцию</button>
-        <button onClick={handleSave} style={{ background: '#222', color: '#fff', fontSize: 18, padding: '12px 32px', border: 'none', borderRadius: 8, cursor: 'pointer' }}>Сохранить</button>
+        <button 
+          onClick={handleSave} 
+          disabled={saving}
+          style={{ 
+            background: saving ? '#ccc' : '#222', 
+            color: '#fff', 
+            fontSize: 18, 
+            padding: '12px 32px', 
+            border: 'none', 
+            borderRadius: 8, 
+            cursor: saving ? 'not-allowed' : 'pointer' 
+          }}
+        >
+          {saving ? 'Сохранение...' : 'Сохранить'}
+        </button>
       </div>
     </div>
   );
