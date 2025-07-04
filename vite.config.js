@@ -13,7 +13,7 @@ export default defineConfig({
           // Выносим админку в отдельный чанк (загружается только при необходимости)
           'admin-vendor': ['draft-js', 'react-draft-wysiwyg', 'draftjs-to-html', 'html-to-draftjs'],
           // Выносим UI библиотеки в отдельный чанк
-          'ui-vendor': ['swiper', 'framer-motion'],
+          'ui-vendor': ['framer-motion'],
           // Роутер отдельно
           'router-vendor': ['react-router-dom']
         }

@@ -4,7 +4,7 @@ import Sidebar from './components/Sidebar'
 import AnimatedWord from './components/AnimatedWord'
 import './App.css'
 import { defaultSections } from './sectionsData'
-import SwiperGallery from './components/SwiperGallery'
+import SimpleGallery from './components/SimpleGallery'
 
 const API_BASE_URL = '/api';
 
@@ -265,7 +265,7 @@ function App() {
                       flex: i === 0 ? 'none' : 1 // Убираем flex: 1 для hero-секции
                     }}>
                     {section.galleryEnabled && section.gallery && section.gallery.length > 0 ? (
-                      <SwiperGallery images={section.gallery} height={imageHeight} />
+                      <SimpleGallery images={section.gallery} height={imageHeight} />
                     ) : section.image && section.image.trim() !== '' ? (
                       failedImages.has(section.image) ? (
                         <div style={{
@@ -421,7 +421,7 @@ function App() {
               marginBottom: '16px'
             }}>
               {section.galleryEnabled && section.gallery && section.gallery.length > 0 ? (
-                <SwiperGallery images={section.gallery} height={imageHeight} />
+                <SimpleGallery images={section.gallery} height={imageHeight} />
               ) : section.image && section.image.trim() !== '' ? (
                 failedImages.has(section.image) ? (
                   <div style={{
