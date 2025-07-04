@@ -68,14 +68,22 @@ ssh -i $SSH_KEY $SERVER_USER@$SERVER_IP "chown -R $SERVER_USER:$SERVER_USER $BAC
 
 # Шаг 10: Запускаем новый backend процесс
 echo -e "${BLUE}🚀 Запускаю новый backend процесс...${NC}"
-ssh -i $SSH_KEY $SERVER_USER@$SERVER_IP "cd $BACKEND_PATH && nohup node server.js > backend.log 2>&1 & echo \$! > backend.pid"
+ssh -i $SSH_KEY $SERVER_USER@$SERVER_IP "cd $BACKEND_PATH && nohup node server.js > backend.log 2>&1 < /dev/null & echo \$! > backend.pid && disown && exit"
 
 # Ждем немного, чтобы backend запустился
-sleep 3
+sleep 5
 
 # Шаг 11: Проверяем, что backend запущен
 echo -e "${BLUE}🏥 Проверяю статус backend...${NC}"
-ssh -i $SSH_KEY $SERVER_USER@$SERVER_IP "curl -s http://localhost:3001/api/health || echo 'Backend не отвечает'"
+BACKEND_STATUS=$(ssh -i $SSH_KEY $SERVER_USER@$SERVER_IP "curl -s http://localhost:3001/api/health -o /dev/null -w '%{http_code}' --connect-timeout 5 || echo '000'")
+if [ "$BACKEND_STATUS" != "200" ]; then
+    echo -e "${YELLOW}⚠️ Backend не отвечает, пробую запустить альтернативным способом...${NC}"
+    ssh -i $SSH_KEY $SERVER_USER@$SERVER_IP "cd $BACKEND_PATH && screen -dm -S backend node server.js"
+    sleep 3
+    ssh -i $SSH_KEY $SERVER_USER@$SERVER_IP "curl -s http://localhost:3001/api/health || echo 'Backend все еще не отвечает'"
+else
+    echo -e "${GREEN}✅ Backend работает корректно${NC}"
+fi
 
 # Шаг 12: Перезапускаем nginx
 echo -e "${YELLOW}🔄 Перезапускаю nginx...${NC}"
