@@ -29,7 +29,21 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({ 
+    storage: storage,
+    limits: {
+        fileSize: 10 * 1024 * 1024, // 10MB лимит
+        files: 1 // Максимум 1 файл за раз
+    },
+    fileFilter: (req, file, cb) => {
+        // Разрешаем только изображения
+        if (file.mimetype.startsWith('image/')) {
+            cb(null, true);
+        } else {
+            cb(new Error('Разрешены только изображения'));
+        }
+    }
+});
 
 // Middleware
 app.use(cors());
@@ -113,23 +127,38 @@ app.post('/api/data', async (req, res) => {
 });
 
 // POST /api/upload - загрузка изображений
-app.post('/api/upload', upload.single('image'), (req, res) => {
-    try {
-        if (!req.file) {
-            return res.status(400).json({ error: 'Файл не загружен' });
+app.post('/api/upload', (req, res) => {
+    upload.single('image')(req, res, (err) => {
+        if (err instanceof multer.MulterError) {
+            console.error('Ошибка multer:', err);
+            if (err.code === 'LIMIT_FILE_SIZE') {
+                return res.status(400).json({ error: 'Файл слишком большой. Максимум 10MB.' });
+            }
+            return res.status(400).json({ error: `Ошибка загрузки: ${err.message}` });
+        } else if (err) {
+            console.error('Ошибка загрузки файла:', err);
+            return res.status(400).json({ error: err.message });
         }
         
-        // Возвращаем URL загруженного файла
-        const fileUrl = `/uploads/${req.file.filename}`;
-        res.json({ 
-            message: 'Файл успешно загружен',
-            url: fileUrl,
-            filename: req.file.filename 
-        });
-    } catch (error) {
-        console.error('Ошибка загрузки файла:', error);
-        res.status(500).json({ error: 'Ошибка загрузки файла' });
-    }
+        try {
+            if (!req.file) {
+                return res.status(400).json({ error: 'Файл не загружен' });
+            }
+            
+            console.log('Файл успешно загружен:', req.file.filename);
+            
+            // Возвращаем URL загруженного файла
+            const fileUrl = `/uploads/${req.file.filename}`;
+            res.json({ 
+                message: 'Файл успешно загружен',
+                url: fileUrl,
+                filename: req.file.filename 
+            });
+        } catch (error) {
+            console.error('Ошибка обработки файла:', error);
+            res.status(500).json({ error: 'Ошибка обработки файла' });
+        }
+    });
 });
 
 // GET /api/health - проверка работы сервера
