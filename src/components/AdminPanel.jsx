@@ -123,14 +123,22 @@ export default function AdminPanel() {
       });
       
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorText = await response.text();
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
       }
       
       const result = await response.json();
+      
+      // Проверяем что ответ содержит URL
+      if (!result || !result.url) {
+        throw new Error('Сервер не вернул URL изображения');
+      }
+      
+      console.log('Изображение загружено:', result.url);
       return result.url;
     } catch (error) {
       console.error('Ошибка загрузки изображения:', error);
-      alert('Ошибка загрузки изображения. Попробуйте еще раз.');
+      alert(`Ошибка загрузки изображения: ${error.message}`);
       return null;
     }
   }
@@ -138,48 +146,65 @@ export default function AdminPanel() {
   async function handleImage(idx, file) {
     if (!file) return;
     
-    // Показываем индикатор загрузки
-    handleChange(idx, 'image', 'loading...');
-    
-    // Загружаем изображение на сервер
-    const imageUrl = await uploadImage(file);
-    if (imageUrl) {
-      handleChange(idx, 'image', imageUrl);
-    } else {
+    try {
+      // Показываем индикатор загрузки
+      handleChange(idx, 'image', 'loading...');
+      
+      // Загружаем изображение на сервер
+      const imageUrl = await uploadImage(file);
+      if (imageUrl) {
+        handleChange(idx, 'image', imageUrl);
+      } else {
+        handleChange(idx, 'image', '');
+      }
+    } catch (error) {
+      console.error('Ошибка в handleImage:', error);
       handleChange(idx, 'image', '');
+      alert('Произошла ошибка при загрузке изображения');
     }
   }
 
   async function handleGalleryImage(idx, file) {
     if (!file) return;
     
-    // Показываем индикатор загрузки
-    setSections(sections => sections.map((s, i) => {
-      if (i !== idx) return s;
-      const gallery = Array.isArray(s.gallery) ? s.gallery.slice(0, 3) : [];
-      if (gallery.length < 3) gallery.push('loading...');
-      return { ...s, gallery };
-    }));
-    
-    // Загружаем изображение на сервер
-    const imageUrl = await uploadImage(file);
-    if (imageUrl) {
+    try {
+      // Показываем индикатор загрузки
       setSections(sections => sections.map((s, i) => {
         if (i !== idx) return s;
-        const gallery = Array.isArray(s.gallery) ? s.gallery.slice() : [];
-        const loadingIndex = gallery.indexOf('loading...');
-        if (loadingIndex !== -1) {
-          gallery[loadingIndex] = imageUrl;
-        }
+        const gallery = Array.isArray(s.gallery) ? s.gallery.slice(0, 3) : [];
+        if (gallery.length < 3) gallery.push('loading...');
         return { ...s, gallery };
       }));
-    } else {
-      // Удаляем индикатор загрузки если загрузка не удалась
+      
+      // Загружаем изображение на сервер
+      const imageUrl = await uploadImage(file);
+      if (imageUrl) {
+        setSections(sections => sections.map((s, i) => {
+          if (i !== idx) return s;
+          const gallery = Array.isArray(s.gallery) ? s.gallery.slice() : [];
+          const loadingIndex = gallery.indexOf('loading...');
+          if (loadingIndex !== -1) {
+            gallery[loadingIndex] = imageUrl;
+          }
+          return { ...s, gallery };
+        }));
+      } else {
+        // Удаляем индикатор загрузки если загрузка не удалась
+        setSections(sections => sections.map((s, i) => {
+          if (i !== idx) return s;
+          const gallery = Array.isArray(s.gallery) ? s.gallery.filter(img => img !== 'loading...') : [];
+          return { ...s, gallery };
+        }));
+      }
+    } catch (error) {
+      console.error('Ошибка в handleGalleryImage:', error);
+      // Удаляем индикатор загрузки в случае ошибки
       setSections(sections => sections.map((s, i) => {
         if (i !== idx) return s;
         const gallery = Array.isArray(s.gallery) ? s.gallery.filter(img => img !== 'loading...') : [];
         return { ...s, gallery };
       }));
+      alert('Произошла ошибка при загрузке изображения в галерею');
     }
   }
 
@@ -521,7 +546,7 @@ export default function AdminPanel() {
                           </div>
                         ) : (
                           <img 
-                            src={img.startsWith('/') ? img : img} 
+                            src={img} 
                             alt="gallery" 
                             style={{ 
                               width: 120, 
@@ -529,7 +554,11 @@ export default function AdminPanel() {
                               objectFit: 'cover', 
                               borderRadius: 8, 
                               border: '1px solid #e9ecef' 
-                            }} 
+                            }}
+                            onError={(e) => {
+                              console.error('Ошибка загрузки изображения:', img);
+                              e.target.style.display = 'none';
+                            }}
                           />
                         )}
                         {img !== 'loading...' && (
@@ -598,7 +627,7 @@ export default function AdminPanel() {
                       </div>
                     ) : (
                       <img 
-                        src={s.image.startsWith('/') ? s.image : s.image} 
+                        src={s.image} 
                         alt="preview" 
                         style={{ 
                           width: 180, 
@@ -606,7 +635,11 @@ export default function AdminPanel() {
                           objectFit: 'cover', 
                           borderRadius: 8, 
                           border: '1px solid #e9ecef' 
-                        }} 
+                        }}
+                        onError={(e) => {
+                          console.error('Ошибка загрузки изображения:', s.image);
+                          e.target.style.display = 'none';
+                        }}
                       />
                     )
                   )}
