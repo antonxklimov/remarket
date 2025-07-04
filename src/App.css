@@ -957,12 +957,10 @@ hr, .hero-block__secondary-hr {
 /* Специальные классы для больших заголовков */
 
 .main-content-inner h1.hero-title {
-  font-size: 9rem !important;
+  font-size: 10rem !important;
   font-weight: 700 !important;
   line-height: 1.1 !important;
   padding-top: 0 !important;
-  word-wrap: break-word !important;
-  overflow-wrap: break-word !important;
 }
 
 @media (max-width: 900px) {
@@ -999,8 +997,6 @@ hr, .hero-block__secondary-hr {
     font-size: 5rem !important;
     padding-top: 0 !important;
     line-height: 1.1 !important;
-    word-wrap: break-word !important;
-    overflow-wrap: break-word !important;
   }
   .hero-block__caption,
   .main-content-inner p {
@@ -1258,7 +1254,7 @@ hr, .hero-block__secondary-hr {
   word-break: normal !important;
   hyphens: none !important;
   white-space: normal !important;
-  overflow-wrap: break-word !important;
+  overflow-wrap: normal !important;
 }
 
 /* Обработка длинных URL и ссылок */

@@ -42,10 +42,9 @@ scp -i $SSH_KEY -r dist/* $SERVER_USER@$SERVER_IP:$SERVER_PATH/
 echo -e "${BLUE}🔧 Подготавливаю backend на сервере...${NC}"
 ssh -i $SSH_KEY $SERVER_USER@$SERVER_IP "mkdir -p $BACKEND_PATH"
 
-# Шаг 6: Загружаем backend файлы на сервер (исключаем node_modules)
+# Шаг 6: Загружаем backend файлы на сервер
 echo -e "${BLUE}📤 Загружаю backend файлы на сервер...${NC}"
-scp -i $SSH_KEY backend/package.json backend/package-lock.json backend/server.js $SERVER_USER@$SERVER_IP:$BACKEND_PATH/
-scp -i $SSH_KEY -r backend/data backend/uploads $SERVER_USER@$SERVER_IP:$BACKEND_PATH/
+scp -i $SSH_KEY -r backend/* $SERVER_USER@$SERVER_IP:$BACKEND_PATH/
 
 # Шаг 7: Устанавливаем зависимости backend на сервере
 echo -e "${BLUE}📦 Устанавливаю зависимости backend на сервере...${NC}"
