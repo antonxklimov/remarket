@@ -961,6 +961,8 @@ hr, .hero-block__secondary-hr {
   font-weight: 700 !important;
   line-height: 1.1 !important;
   padding-top: 0 !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
 }
 
 @media (max-width: 900px) {
