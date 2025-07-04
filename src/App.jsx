@@ -88,7 +88,7 @@ function App() {
       const w = window.innerWidth;
       if (w > 900) {
         const available = w - 400;
-        setScale(Math.min(1, available / 1400));
+        setScale(Math.min(1, available / 1200));
       } else {
         setScale(1);
       }
@@ -137,7 +137,7 @@ function App() {
       }}>
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontSize: 24, marginBottom: 16 }}>Загрузка...</div>
-          <div style={{ fontSize: 16, color: '#666' }}>RE→MARKET 2025</div>
+          <div style={{ fontSize: 16, color: '#666' }}><i>RE→MARKET</i> 2025</div>
         </div>
       </div>
     );
@@ -164,7 +164,7 @@ function App() {
           <div
             className="main-content-inner"
             style={{
-              width: 1400,
+              width: 1200,
               transform: `scale(${scale})`,
               transformOrigin: 'left top',
               margin: 0,
@@ -221,7 +221,7 @@ function App() {
                           fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif'
                         }}
                       >
-                        <AnimatedWord /><br />фестиваль локальных брендов RE→MARKET
+                        <AnimatedWord /><br />фестиваль локальных брендов <i>RE→MARKET</i>
                       </h1>
                     </div>
                   ) : (
@@ -373,7 +373,7 @@ function App() {
                     fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif'
                   }}
                 >
-                  <AnimatedWord /><br />фестиваль локальных брендов RE→MARKET
+                  <AnimatedWord /><br />фестиваль локальных брендов <i>RE→MARKET</i>
                 </h1>
               </div>
             ) : (

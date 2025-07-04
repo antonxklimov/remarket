@@ -540,7 +540,7 @@ html {
   display: none; /* Chrome, Safari and Opera */
 }
 .main-content-inner {
-  width: 1400px;
+  width: 1200px;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -957,7 +957,7 @@ hr, .hero-block__secondary-hr {
 /* Специальные классы для больших заголовков */
 
 .main-content-inner h1.hero-title {
-  font-size: 8rem !important;
+  font-size: 9rem !important;
   font-weight: 700 !important;
   line-height: 1.1 !important;
   padding-top: 0 !important;
@@ -1062,7 +1062,7 @@ hr, .hero-block__secondary-hr {
     display: none; /* Chrome, Safari and Opera */
   }
   .main-content-inner {
-    width: 1400px;
+    width: 1200px;
     margin: 0;
     padding: 0 0 0 24px;
     box-sizing: border-box;
@@ -1294,10 +1294,8 @@ hr, .hero-block__secondary-hr {
   text-align: left;
 }
 
-/* Контейнеры секций - только ограничение по ширине без overflow */
-.main-content-inner,
+/* Контейнеры секций - без ограничения ширины для main-content-inner */
 .main-content-inner section {
-  max-width: 100% !important;
   box-sizing: border-box !important;
 }
 
@@ -1312,12 +1310,12 @@ hr, .hero-block__secondary-hr {
   white-space: normal !important;
 }
 
-/* Ограничение ширины для контейнеров секций */
-.main-content-inner section > div {
+/* Ограничение ширины только для текстовых элементов внутри секций */
+.main-content-inner section > div[style*="fontSize"] {
   max-width: 100% !important;
 }
 
-.main-content-inner section > div > * {
+.main-content-inner section > div[style*="fontSize"] > * {
   max-width: 100% !important;
 }
 
@@ -1336,16 +1334,7 @@ hr, .hero-block__secondary-hr {
   max-width: 100% !important;
 }
 
-/* Контейнер с ограничением ширины */
-.main-content-inner section {
-  max-width: 100% !important;
-}
-
-
-
-.main-content-inner section > * {
-  max-width: 100% !important;
-}
+/* Ограничение ширины только для текстовых контейнеров */
 
 /* Специфичные стили для контента секций */
 .main-content-inner section > div[style*="fontSize"] {

@@ -302,7 +302,7 @@ export default function AdminPanel() {
     }}>
       <div style={{ maxWidth: 800, width: '100%', margin: '40px auto', background: '#f8f9fa', borderRadius: 16, padding: 40, fontFamily: 'Helvetica Neue', color: '#000' }}>
         <div style={{ background: '#fff', borderRadius: 12, padding: 32, marginBottom: 32, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-          <h1 style={{ fontSize: 36, marginBottom: 8, fontWeight: 700 }}>Админка RE→MARKET</h1>
+          <h1 style={{ fontSize: 36, marginBottom: 8, fontWeight: 700 }}>Админка <i>RE→MARKET</i></h1>
           <p style={{ fontSize: 16, color: '#666', margin: 0 }}>Управление контентом и секциями сайта</p>
         </div>
         {sections.map((s, i) => (
@@ -459,7 +459,11 @@ export default function AdminPanel() {
                 <Editor
                   editorState={s.editorState}
                   onEditorStateChange={editorState => handleEditorChange(i, editorState)}
-                  toolbar={{ options: ['inline', 'list', 'link', 'history'], inline: { options: ['bold', 'italic', 'underline'] } }}
+                  toolbar={{ 
+                    options: ['inline', 'list', 'link', 'remove', 'history'], 
+                    inline: { options: ['bold', 'italic', 'underline'] },
+                    remove: { options: ['removeFormat'] }
+                  }}
                   editorStyle={{ minHeight: 80, padding: 8, fontSize: 16, background: '#fff' }}
                 />
               </div>
