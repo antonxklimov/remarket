@@ -957,7 +957,7 @@ hr, .hero-block__secondary-hr {
 /* Специальные классы для больших заголовков */
 
 .main-content-inner h1.hero-title {
-  font-size: 10rem !important;
+  font-size: 9rem !important;
   font-weight: 700 !important;
   line-height: 1.1 !important;
   padding-top: 0 !important;
