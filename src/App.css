@@ -999,6 +999,8 @@ hr, .hero-block__secondary-hr {
     font-size: 5rem !important;
     padding-top: 0 !important;
     line-height: 1.1 !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
   }
   .hero-block__caption,
   .main-content-inner p {
@@ -1256,7 +1258,7 @@ hr, .hero-block__secondary-hr {
   word-break: normal !important;
   hyphens: none !important;
   white-space: normal !important;
-  overflow-wrap: normal !important;
+  overflow-wrap: break-word !important;
 }
 
 /* Обработка длинных URL и ссылок */
