@@ -299,7 +299,12 @@ function App() {
                       padding: '16px 0',
                       boxSizing: 'border-box',
                       flexShrink: 0,
-                      fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif'
+                      fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+                      wordWrap: 'break-word',
+                      overflowWrap: 'break-word',
+                      wordBreak: 'normal',
+                      whiteSpace: 'normal',
+                      hyphens: 'none'
                     }}
                     dangerouslySetInnerHTML={{ __html: section.text }}
                   />
@@ -404,7 +409,12 @@ function App() {
                 marginBottom: '16px', 
                 height: 'auto', // Автоматическая высота для мобильных
                 overflow: 'visible', // Убираем скролл для мобильных
-                fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif'
+                fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+                wordWrap: 'break-word',
+                overflowWrap: 'break-word',
+                wordBreak: 'normal',
+                whiteSpace: 'normal',
+                hyphens: 'none'
               }}
               dangerouslySetInnerHTML={{ __html: section.text }}
             />
