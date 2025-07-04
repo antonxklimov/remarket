@@ -1245,12 +1245,12 @@ hr, .hero-block__secondary-hr {
   word-break: normal !important;
   hyphens: none !important;
   white-space: normal !important;
-  text-wrap: balance !important;
+  text-wrap: wrap !important;
 }
 
 /* Специальные правила для заголовков */
 .main-content-inner h1.hero-title {
-  text-wrap: balance !important;
+  text-wrap: wrap !important;
   word-break: normal !important;
   hyphens: none !important;
   white-space: normal !important;
@@ -1411,7 +1411,7 @@ hr, .hero-block__secondary-hr {
   word-break: normal !important;
   white-space: normal !important;
   hyphens: none !important;
-  text-wrap: balance !important;
+  text-wrap: wrap !important;
 }
 
 .main-content .main-content-inner section div[style*="fontSize"] {
