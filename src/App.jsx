@@ -36,6 +36,7 @@ function App() {
   const [sections, setSections] = useState(defaultSections);
   const [loading, setLoading] = useState(true);
   const [scale, setScale] = useState(1);
+  const [failedImages, setFailedImages] = useState(new Set());
   const dateRef = useRef();
   const firstSectionRef = useRef();
   // Новый breakpoint 560px
@@ -50,6 +51,11 @@ function App() {
     handleResize();
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  function handleImageError(src) {
+    console.error('Ошибка загрузки изображения:', src);
+    setFailedImages(prev => new Set([...prev, src]));
+  }
 
   useEffect(() => {
     const prevTitle = document.title;
@@ -261,12 +267,34 @@ function App() {
                     {section.galleryEnabled && section.gallery && section.gallery.length > 0 ? (
                       <SwiperGallery images={section.gallery} height={imageHeight} />
                     ) : section.image && section.image.trim() !== '' ? (
-                      <img src={section.image} alt="section" style={{
-                        width: '100%', 
-                        height: '100%',
-                        objectFit: 'cover', 
-                        borderRadius: 8
-                      }} />
+                      failedImages.has(section.image) ? (
+                        <div style={{
+                          width: '100%', 
+                          height: '100%',
+                          background: '#f5f5f5', 
+                          borderRadius: 8,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: '#666',
+                          fontSize: '1.2rem',
+                          fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif'
+                        }}>
+                          Изображение недоступно
+                        </div>
+                      ) : (
+                        <img 
+                          src={section.image} 
+                          alt="section" 
+                          style={{
+                            width: '100%', 
+                            height: '100%',
+                            objectFit: 'cover', 
+                            borderRadius: 8
+                          }}
+                          onError={() => handleImageError(section.image)}
+                        />
+                      )
                     ) : (
                       <div 
                         className="section-image-placeholder"
@@ -395,7 +423,34 @@ function App() {
               {section.galleryEnabled && section.gallery && section.gallery.length > 0 ? (
                 <SwiperGallery images={section.gallery} height={imageHeight} />
               ) : section.image && section.image.trim() !== '' ? (
-                <img src={section.image} alt="section" style={{width: '100%', height: '100%', objectFit: 'cover', borderRadius: 8}} />
+                failedImages.has(section.image) ? (
+                  <div style={{
+                    width: '100%', 
+                    height: '100%',
+                    background: '#f5f5f5', 
+                    borderRadius: 8,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#666',
+                    fontSize: '1.2rem',
+                    fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif'
+                  }}>
+                    Изображение недоступно
+                  </div>
+                ) : (
+                  <img 
+                    src={section.image} 
+                    alt="section" 
+                    style={{
+                      width: '100%', 
+                      height: '100%', 
+                      objectFit: 'cover', 
+                      borderRadius: 8
+                    }}
+                    onError={() => handleImageError(section.image)}
+                  />
+                )
               ) : (
                 <div style={{width: '100%', height: '100%', background: '#f5f5f5', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#000', fontSize: '1.2rem', fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif'}}>
                   Изображение
