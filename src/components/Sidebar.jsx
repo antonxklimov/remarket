@@ -24,22 +24,22 @@ const Sidebar = ({ onMenuClick, sections }) => {
       <div className="sidebar__title">
         <img src={Logo} alt="RE→MARKET logo" style={{height: 66, width: 'auto', display: 'block'}} />
       </div>
-      <ol className="sidebar__nav">
+      <ul className="sidebar__nav">
         {menuSections.map((s, index) => (
           <li key={s.id}>
             <a href={`#${s.id}`} style={{textDecoration: 'none', color: 'inherit', cursor: 'pointer'}} onClick={e => onMenuClick && onMenuClick(e, s.id)}>
-              {s.id === 'hero' ? 'О маркете' : s.title}
+              {s.id === 'hero' ? 'о маркете' : s.title.toLowerCase()}
             </a>
           </li>
         ))}
-      </ol>
+      </ul>
       <div className="sidebar__links">
-        <a href="mailto:re.market.re@yandex.ru">Подать заявку →</a><br />
-        <a href="https://www.instagram.com/re____market/" target="_blank" rel="noopener noreferrer">Instagram</a><br />
-        <a href="https://t.me/remarket24" target="_blank" rel="noopener noreferrer">Telegram</a>
+        <a href="mailto:re.market.re@yandex.ru">подать заявку →</a><br />
+        <a href="https://www.instagram.com/re____market/" target="_blank" rel="noopener noreferrer">instagram</a><br />
+        <a href="https://t.me/remarket24" target="_blank" rel="noopener noreferrer">telegram</a>
       </div>
       <div className="sidebar__copyright">
-        ©{new Date().getFullYear()} <a href="https://inoutstud.io/" target="_blank" rel="noopener noreferrer" className="sidebar__studio-link">in—out studio</a>
+        ©{new Date().getFullYear()}
       </div>
     </aside>
   );

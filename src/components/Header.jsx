@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import Logo from '../images/Logo.svg';
 
 const extraLinks = [
-  { label: 'Подать заявку →', href: 'mailto:re.market.re@yandex.ru' },
-  { label: 'Instagram', href: 'https://www.instagram.com/re____market/' },
-  { label: 'Telegram', href: 'https://t.me/remarket24' },
+  { label: 'подать заявку →', href: 'mailto:re.market.re@yandex.ru' },
+  { label: 'instagram', href: 'https://www.instagram.com/re____market/' },
+  { label: 'telegram', href: 'https://t.me/remarket24' },
 ];
 
 const Header = ({ sections, onMenuClick }) => {
@@ -50,7 +50,7 @@ const Header = ({ sections, onMenuClick }) => {
               </button>
             </div>
             <div className="mobile-menu-content">
-              <ol className="mobile-menu-list-minimal">
+              <ul className="mobile-menu-list-minimal">
                 {visibleSections.map((s, idx) => (
                   <li key={s.id}>
                     <a
@@ -60,11 +60,11 @@ const Header = ({ sections, onMenuClick }) => {
                         onMenuClick && onMenuClick(e, s.id);
                       }}
                     >
-                      {idx === 0 ? 'О маркете' : s.title}
+                      {idx === 0 ? 'о маркете' : s.title.toLowerCase()}
                     </a>
                   </li>
                 ))}
-              </ol>
+              </ul>
               <div className="mobile-menu-links-minimal">
                 {extraLinks.map(link => (
                   <div key={link.label}>
@@ -74,7 +74,7 @@ const Header = ({ sections, onMenuClick }) => {
               </div>
             </div>
             <div className="mobile-menu-copyright-minimal">
-              ©{new Date().getFullYear()} <a href="https://inoutstud.io/" target="_blank" rel="noopener noreferrer" className="sidebar__studio-link">in—out studio</a>
+              ©{new Date().getFullYear()}
             </div>
           </div>
         </div>

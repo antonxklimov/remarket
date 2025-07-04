@@ -328,10 +328,10 @@ html {
     text-decoration: none;
     font-weight: 400;
     font-size: 1.35rem;
-    transition: filter 0.2s;
   }
   .mobile-menu-nav__link:hover {
-    filter: blur(2px);
+    font-style: italic;
+    font-weight: normal;
   }
   .mobile-menu-links {
     margin-left: 24px;
@@ -343,10 +343,10 @@ html {
   .mobile-menu-links a {
     color: inherit;
     text-decoration: none;
-    transition: filter 0.2s;
   }
   .mobile-menu-links a:hover {
-    filter: blur(2px);
+    font-style: italic;
+    font-weight: normal;
   }
   .mobile-menu-copyright {
     margin-left: 24px;
@@ -358,10 +358,10 @@ html {
   .mobile-menu-copyright a {
     color: inherit;
     text-decoration: none;
-    transition: filter 0.2s;
   }
   .mobile-menu-copyright a:hover {
-    filter: blur(2px);
+    font-style: italic;
+    font-weight: normal;
   }
   .mobile-header {
     display: flex;
@@ -436,8 +436,6 @@ html {
 .sidebar__title,
 .sidebar__nav,
 .sidebar__nav li,
-.sidebar__links,
-.sidebar__links a,
 .sidebar__copyright {
   font-size: 2.8rem;
   font-weight: 400;
@@ -450,9 +448,10 @@ html {
 }
 .sidebar__nav {
   margin: 0 0 24px 0;
-  padding-left: 1.6em;
+  padding-left: 0;
   line-height: 1.2;
-  list-style-position: inside;
+  list-style: none;
+  font-weight: 800;
 }
 .sidebar__nav li {
   text-align: left;
@@ -463,53 +462,35 @@ html {
 .sidebar__nav li a:hover {
   color: #111 !important;
 }
-.sidebar__nav li::marker {
-  font-size: 2.8rem;
-  color: rgba(0,0,0,0.85);
-  margin-right: 0.3em;
-  transition: filter 0.25s !important;
-}
-.sidebar__nav li:hover::marker,
-.sidebar__nav li:has(a:hover)::marker {
-  filter: blur(2px) !important;
-}
+
 .sidebar__nav li a {
-  font-weight: 400 !important;
+  font-weight: 800 !important;
   position: relative;
   z-index: 1;
   overflow: hidden;
-  transition: filter 0.25s;
 }
 .sidebar__nav li a:hover {
-  color: #222;
-  filter: blur(2px);
+  color: inherit;
+  font-style: italic;
+  font-weight: normal !important;
 }
-.sidebar__nav li a::before {
-  content: '';
-  position: absolute;
-  inset: -4px;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.25s;
-  background: url('https://grainy-gradients.vercel.app/noise.svg');
-  filter: blur(2.5px) brightness(1.2);
-}
-.sidebar__nav li a:hover::before {
-  opacity: 0.45;
-}
+
 .sidebar__links {
   margin-bottom: 24px;
   line-height: 1.2;
+  font-size: 1.0rem;
+  margin-top: 48px;
+  font-weight: 800;
 }
 .sidebar__links a {
   color: inherit;
   text-decoration: none;
-  transition: color 0.2s, filter 0.2s;
+  font-weight: 800;
 }
 .sidebar__links a:hover {
-  color: #000;
-  filter: blur(2px);
+  color: inherit;
+  font-style: italic;
+  font-weight: 800;
   text-decoration: none;
 }
 .sidebar__copyright {
@@ -961,6 +942,11 @@ hr, .hero-block__secondary-hr {
   font-weight: 700 !important;
   line-height: 1.1 !important;
   padding-top: 0 !important;
+  cursor: pointer;
+}
+.main-content-inner h1.hero-title:hover {
+  font-style: italic;
+  font-weight: normal !important;
 }
 
 @media (max-width: 900px) {
@@ -997,6 +983,11 @@ hr, .hero-block__secondary-hr {
     font-size: 5rem !important;
     padding-top: 0 !important;
     line-height: 1.1 !important;
+    cursor: pointer;
+  }
+  .main-content-inner h1.hero-title:hover {
+    font-style: italic;
+    font-weight: normal !important;
   }
   .hero-block__caption,
   .main-content-inner p {
@@ -1020,22 +1011,23 @@ hr, .hero-block__secondary-hr {
 .sidebar__studio-link {
   color: inherit;
   text-decoration: none;
-  transition: color 0.2s, filter 0.2s;
 }
 .sidebar__studio-link:hover {
-  color: #000;
-  filter: blur(2px);
+  color: inherit;
+  font-style: italic;
+  font-weight: normal;
   text-decoration: none;
 }
 
 .sidebar__links a {
   color: inherit;
   text-decoration: none;
-  transition: color 0.2s, filter 0.2s;
+  font-weight: 800;
 }
 .sidebar__links a:hover {
-  color: #000;
-  filter: blur(2px);
+  color: inherit;
+  font-style: italic;
+  font-weight: 800;
   text-decoration: none;
 }
 
@@ -1113,86 +1105,64 @@ hr, .hero-block__secondary-hr {
   cursor: pointer;
   line-height: 1;
   padding: 0;
-  transition: filter 0.25s;
 }
 .mobile-menu-close-minimal:hover {
-  filter: blur(2px);
+  font-style: italic;
+  font-weight: normal;
 }
 .mobile-menu-list-minimal {
-  list-style: decimal inside;
+  list-style: none;
   font-size: 2.8rem;
   color: rgba(0,0,0,0.85);
-  font-weight: 400;
+  font-weight: 800;
   margin: 0 0 48px 0;
   padding: 0 24px;
-  padding-left: calc(24px + 1.6em);
   line-height: 1.0;
-  list-style-position: inside;
 }
 .mobile-menu-list-minimal li {
   margin-bottom: 4px;
   text-align: left;
   position: relative;
 }
-.mobile-menu-list-minimal li::marker {
-  font-size: 2.8rem;
-  color: #000;
-  margin-right: 0.3em;
-  transition: filter 0.25s;
-}
-.mobile-menu-list-minimal li:hover::marker {
-  filter: blur(2px);
-}
+
 .mobile-menu-list-minimal a {
   color: #000;
   text-decoration: none;
   font-size: 2.8rem;
-  font-weight: 400;
-  transition: filter 0.25s;
+  font-weight: 800;
   position: relative;
   overflow: hidden;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 .mobile-menu-list-minimal a:hover {
-  color: #111;
-  filter: blur(2px);
+  color: inherit;
+  font-style: italic;
+  font-weight: normal;
 }
-.mobile-menu-list-minimal a::before {
-  content: '';
-  position: absolute;
-  inset: -4px;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.25s;
-  background: url('https://grainy-gradients.vercel.app/noise.svg');
-  filter: blur(2.5px) brightness(1.2);
-}
-.mobile-menu-list-minimal a:hover::before {
-  opacity: 0.45;
-}
+
 .mobile-menu-links-minimal {
   margin-bottom: 0;
-  font-size: 2.8rem;
+  font-size: 1.0rem;
   color: #000;
-  font-weight: 400;
+  font-weight: 800;
   line-height: 1.0;
   padding: 0 24px;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  margin-top: 48px;
 }
 .mobile-menu-links-minimal a {
   color: #000;
   text-decoration: none;
-  font-size: 2.8rem;
-  font-weight: 400;
+  font-size: 1.0rem;
+  font-weight: 800;
   display: block;
   margin-bottom: 3px;
-  transition: filter 0.25s;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 .mobile-menu-links-minimal a:hover {
-  color: #000;
-  filter: blur(2px);
+  color: inherit;
+  font-style: italic;
+  font-weight: 800;
 }
 .mobile-menu-content {
   display: flex;
@@ -1211,11 +1181,11 @@ hr, .hero-block__secondary-hr {
 .mobile-menu-copyright-minimal .sidebar__studio-link {
   color: inherit;
   text-decoration: none;
-  transition: color 0.2s, filter 0.2s;
 }
 .mobile-menu-copyright-minimal .sidebar__studio-link:hover {
-  color: #000;
-  filter: blur(2px);
+  color: inherit;
+  font-style: italic;
+  font-weight: normal;
   text-decoration: none;
 }
 
