@@ -1415,6 +1415,35 @@ hr, .hero-block__secondary-hr {
   margin-left: 24px;
 }
 
+/* Максимально специфичные стили для текстовых блоков - будут работать в production */
+.main-content .main-content-inner section div[style*="fontSize"][dangerouslySetInnerHTML] {
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+  word-break: normal !important;
+  white-space: normal !important;
+  hyphens: none !important;
+  text-wrap: balance !important;
+}
+
+.main-content .main-content-inner section div[style*="fontSize"] {
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important; 
+  word-break: normal !important;
+  white-space: normal !important;
+  hyphens: none !important;
+}
+
+/* Дополнительные правила для максимальной специфичности */
+div.main-content-inner section div[style*="fontSize"] p,
+div.main-content-inner section div[style*="fontSize"] span,
+div.main-content-inner section div[style*="fontSize"] {
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+  word-break: normal !important;
+  white-space: normal !important;
+  hyphens: none !important;
+}
+
 @media (max-width: 900px) {
   .section-title {
     font-size: 3rem !important;
