@@ -1445,3 +1445,8 @@ div.main-content-inner section div[style*="fontSize"] {
     display: none;
   }
 }
+
+.menu-link:hover, .menu-link:focus {
+  font-style: italic;
+  font-weight: 800;
+}

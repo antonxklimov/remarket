@@ -27,16 +27,21 @@ const Sidebar = ({ onMenuClick, sections }) => {
       <ul className="sidebar__nav">
         {menuSections.map((s, index) => (
           <li key={s.id}>
-            <a href={`#${s.id}`} style={{textDecoration: 'none', color: 'inherit', cursor: 'pointer'}} onClick={e => onMenuClick && onMenuClick(e, s.id)}>
+            <a
+              className="menu-link"
+              href={`#${s.id}`}
+              style={{textDecoration: 'none', color: 'inherit', cursor: 'pointer'}}
+              onClick={e => onMenuClick && onMenuClick(e, s.id)}
+            >
               {s.id === 'hero' ? 'о маркете' : s.title.toLowerCase()}
             </a>
           </li>
         ))}
       </ul>
       <div className="sidebar__links">
-        <a href="mailto:re.market.re@yandex.ru">подать заявку →</a><br />
-        <a href="https://www.instagram.com/re____market/" target="_blank" rel="noopener noreferrer">instagram</a><br />
-        <a href="https://t.me/remarket24" target="_blank" rel="noopener noreferrer">telegram</a>
+        <a className="menu-link" href="mailto:re.market.re@yandex.ru">подать заявку →</a><br />
+        <a className="menu-link" href="https://www.instagram.com/re____market/" target="_blank" rel="noopener noreferrer">instagram</a><br />
+        <a className="menu-link" href="https://t.me/remarket24" target="_blank" rel="noopener noreferrer">telegram</a>
       </div>
       <div className="sidebar__copyright">
         ©{new Date().getFullYear()}

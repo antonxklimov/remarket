@@ -54,6 +54,7 @@ const Header = ({ sections, onMenuClick }) => {
                 {visibleSections.map((s, idx) => (
                   <li key={s.id}>
                     <a
+                      className="menu-link"
                       href={`#${s.id}`}
                       onClick={e => {
                         setMobileMenuOpen(false);
@@ -68,7 +69,7 @@ const Header = ({ sections, onMenuClick }) => {
               <div className="mobile-menu-links-minimal">
                 {extraLinks.map(link => (
                   <div key={link.label}>
-                    <a href={link.href} target={link.href.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer">{link.label}</a>
+                    <a className="menu-link" href={link.href} target={link.href.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer">{link.label}</a>
                   </div>
                 ))}
               </div>
