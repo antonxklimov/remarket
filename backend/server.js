@@ -3,7 +3,7 @@ const cors = require('cors');
 const fs = require('fs-extra');
 const path = require('path');
 const multer = require('multer');
-const sharp = require('sharp');
+const Jimp = require('jimp');
 const rateLimit = require('express-rate-limit');
 const { generateToken, verifyAdminPassword, requireAuth } = require('./auth');
 
@@ -22,34 +22,33 @@ async function ensureDirectories() {
 }
 
 // Функция для оптимизации изображений (ресайз 50% + качество 90%)
-async function optimizeImage(inputPath, outputPath) {
-    try {
-        const metadata = await sharp(inputPath).metadata();
-        console.log(`Обрабатываю изображение: ${metadata.width}x${metadata.height} -> ${Math.round(metadata.width * 0.5)}x${Math.round(metadata.height * 0.5)}`);
-        
-        const newWidth = Math.round(metadata.width * 0.5);
-        const newHeight = Math.round(metadata.height * 0.5);
-        
-        // Обрабатываем изображение: ресайз до 50% + качество 90%
-        let pipeline = sharp(inputPath)
-            .resize(newWidth, newHeight, {
-                fit: 'inside',
-                withoutEnlargement: true
-            });
-        if (metadata.format === 'jpeg' || metadata.format === 'jpg') {
-            pipeline = pipeline.jpeg({ quality: 90 });
-        } else if (metadata.format === 'png') {
-            pipeline = pipeline.png({ quality: 90 });
-        } else if (metadata.format === 'webp') {
-            pipeline = pipeline.webp({ quality: 90 });
+async function optimizeImage(inputPath, outputPath, maxWidth = 1200, maxHeight = 1200) {
+    const image = await Jimp.read(inputPath);
+    // Определяем новые размеры
+    let { width, height } = image.bitmap;
+    let newWidth = width;
+    let newHeight = height;
+    if (width > maxWidth || height > maxHeight) {
+        const aspect = width / height;
+        if (width > height) {
+            newWidth = maxWidth;
+            newHeight = Math.round(maxWidth / aspect);
+        } else {
+            newHeight = maxHeight;
+            newWidth = Math.round(maxHeight * aspect);
         }
-        await pipeline.toFile(outputPath);
-        
-        console.log(`Изображение оптимизировано: ${outputPath}`);
-        return true;
-    } catch (error) {
-        console.error('Ошибка оптимизации изображения:', error);
-        return false;
+    }
+    image.resize(newWidth, newHeight);
+    // Определяем формат по расширению
+    const ext = inputPath.split('.').pop().toLowerCase();
+    if (ext === 'jpg' || ext === 'jpeg') {
+        await image.quality(90).writeAsync(outputPath);
+    } else if (ext === 'png') {
+        await image.quality(90).writeAsync(outputPath); // Jimp quality влияет только на JPEG, но PNG всё равно сохранится
+    } else if (ext === 'webp') {
+        await image.quality(90).writeAsync(outputPath); // Jimp поддерживает webp
+    } else {
+        await image.writeAsync(outputPath);
     }
 }
 
