@@ -171,8 +171,8 @@ export default function AdminPanel() {
       // Показываем индикатор загрузки
       setSections(sections => sections.map((s, i) => {
         if (i !== idx) return s;
-        const gallery = Array.isArray(s.gallery) ? s.gallery.slice(0, 3) : [];
-        if (gallery.length < 3) gallery.push('loading...');
+        const gallery = Array.isArray(s.gallery) ? s.gallery.slice(0, 5) : [];
+        if (gallery.length < 5) gallery.push('loading...');
         return { ...s, gallery };
       }));
       
@@ -520,12 +520,12 @@ export default function AdminPanel() {
                     accentColor: '#000' 
                   }} 
                 />
-                Включить галерею (до 3 фото)
+                Включить галерею (до 5 фото)
               </label>
               
               {s.galleryEnabled ? (
                 <div>
-                  <GalleryInput idx={i} gallery={s.gallery} onAdd={handleGalleryImage} disabled={s.gallery && s.gallery.length >= 3} />
+                  <GalleryInput idx={i} gallery={s.gallery} onAdd={handleGalleryImage} disabled={s.gallery && s.gallery.length >= 5} />
                   <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                     {s.gallery && s.gallery.map((img, imgIdx) => (
                       <div key={imgIdx} style={{ position: 'relative', borderRadius: 8, overflow: 'hidden' }}>
