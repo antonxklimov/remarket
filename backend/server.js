@@ -3,7 +3,7 @@ const cors = require('cors');
 const fs = require('fs-extra');
 const path = require('path');
 const multer = require('multer');
-const sharp = require('sharp');
+// const sharp = require('sharp');
 
 const app = express();
 const PORT = 3001;
@@ -19,30 +19,16 @@ async function ensureDirectories() {
     await fs.ensureDir(TEMP_UPLOADS_DIR);
 }
 
-// Функция для оптимизации изображений (ресайз 50% + качество 90%)
+// Функция для оптимизации изображений (временно отключена, просто копирует файл)
 async function optimizeImage(inputPath, outputPath) {
     try {
-        const metadata = await sharp(inputPath).metadata();
-        console.log(`Обрабатываю изображение: ${metadata.width}x${metadata.height} -> ${Math.round(metadata.width * 0.5)}x${Math.round(metadata.height * 0.5)}`);
-        
-        const newWidth = Math.round(metadata.width * 0.5);
-        const newHeight = Math.round(metadata.height * 0.5);
-        
-        // Обрабатываем изображение: ресайз до 50% + качество 90%
-        await sharp(inputPath)
-            .resize(newWidth, newHeight, {
-                fit: 'inside',
-                withoutEnlargement: true
-            })
-            .jpeg({ quality: 90 })
-            .png({ quality: 90 })
-            .webp({ quality: 90 })
-            .toFile(outputPath);
-        
-        console.log(`Изображение оптимизировано: ${outputPath}`);
-        return true;
+        // Временно отключаем оптимизацию sharp до решения проблем с установкой на сервере
+        console.log('Копирую изображение без оптимизации (sharp временно отключен)');
+        await fs.copy(inputPath, outputPath);
+        console.log(`Изображение скопировано: ${outputPath}`);
+        return false; // Возвращаем false, чтобы показать что оптимизация не применена
     } catch (error) {
-        console.error('Ошибка оптимизации изображения:', error);
+        console.error('Ошибка копирования изображения:', error);
         return false;
     }
 }
@@ -199,7 +185,7 @@ app.post('/api/upload', (req, res) => {
             // Возвращаем URL оптимизированного файла
             const fileUrl = `/uploads/${optimizedFilename}`;
             res.json({ 
-                message: optimized ? 'Файл успешно загружен и оптимизирован (50% размер, 90% качество)' : 'Файл успешно загружен',
+                message: optimized ? 'Файл успешно загружен и оптимизирован (50% размер, 90% качество)' : 'Файл успешно загружен (оптимизация временно отключена)',
                 url: fileUrl,
                 filename: optimizedFilename,
                 optimized: optimized
