@@ -5,6 +5,7 @@ import { EditorState, ContentState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 import { useAuthContext } from '../contexts/AuthContext';
+import UploadManager from './UploadManager';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 const API_BASE_URL = '/api';
@@ -14,6 +15,7 @@ export default function AdminPanel() {
   const [sections, setSections] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploadedImages, setUploadedImages] = useState([]);
 
   useEffect(() => {
     // Снимаем любые ограничения overflow для body и html
@@ -108,6 +110,12 @@ export default function AdminPanel() {
   function handleChange(idx, field, value) {
     setSections(sections => sections.map((s, i) => i === idx ? { ...s, [field]: value } : s));
   }
+
+  // Обработка завершения загрузки изображения
+  const handleUploadComplete = (imageUrl) => {
+    setUploadedImages(prev => [...prev, imageUrl]);
+    // Можно добавить уведомление или автоматическое применение к выбранной секции
+  };
 
   function handleEditorChange(idx, editorState) {
     const html = draftToHtml(convertToRaw(editorState.getCurrentContent()));
@@ -269,13 +277,23 @@ export default function AdminPanel() {
     try {
       const sectionsData = sections.map(({editorState, ...rest}) => rest);
       
+      // Отладочная информация
+      const headers = getAuthHeaders();
+      console.log('Auth headers:', headers);
+      console.log('Token from localStorage:', localStorage.getItem('authToken'));
+      
       const response = await fetch(`${API_BASE_URL}/data`, {
         method: 'POST',
-        headers: getAuthHeaders(),
+        headers: headers,
         body: JSON.stringify({ sections: sectionsData }),
       });
       
+      console.log('Response status:', response.status);
+      console.log('Response headers:', response.headers);
+      
       if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Error response:', errorText);
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       
@@ -726,6 +744,9 @@ export default function AdminPanel() {
           </button>
         </div>
       </div>
+      
+      {/* Upload Manager */}
+      <UploadManager onUploadComplete={handleUploadComplete} />
     </div>
   );
 }

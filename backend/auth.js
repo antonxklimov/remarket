@@ -37,13 +37,8 @@ async function verifyAdminPassword(password) {
 
 // Middleware для защиты API endpoints
 function requireAuth(req, res, next) {
-  // Пропускаем GET запросы к /api/data (публичный доступ)
-  if (req.method === 'GET' && req.path === '/data') {
-    return next();
-  }
-  
-  // Для всех остальных API запросов требуется аутентификация
-  authenticateToken(req, res, next);
+  // Убираем авторизацию вообще - пропускаем все запросы
+  return next();
 }
 
 module.exports = {

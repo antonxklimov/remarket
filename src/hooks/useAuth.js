@@ -14,6 +14,8 @@ export function useAuth() {
     setError(null);
     
     try {
+      console.log('Attempting login with password:', password);
+      
       const response = await fetch(`${API_BASE_URL}/login`, {
         method: 'POST',
         headers: {
@@ -22,19 +24,24 @@ export function useAuth() {
         body: JSON.stringify({ password }),
       });
 
+      console.log('Login response status:', response.status);
+      
       const data = await response.json();
+      console.log('Login response data:', data);
 
       if (!response.ok) {
         throw new Error(data.error || 'Ошибка аутентификации');
       }
 
       // Сохраняем токен
+      console.log('Saving token to localStorage:', data.token);
       localStorage.setItem('authToken', data.token);
       setToken(data.token);
       setIsAuthenticated(true);
       
       return { success: true };
     } catch (err) {
+      console.error('Login error:', err);
       setError(err.message);
       return { success: false, error: err.message };
     } finally {
