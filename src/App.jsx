@@ -188,10 +188,8 @@ function App() {
               const textHeight = 140; // Увеличено для более крупного текста
               const margins = 48; // Одинаковые отступы для всех секций
               
-              // Для hero-секции используем фиксированный большой размер изображения
-              const imageHeight = i === 0 
-                ? 600 // Фиксированно 600px для hero-секции - это должно сделать секцию выше экрана
-                : Math.max(200, availableHeight - headerHeight - textHeight - margins);
+              // Все секции имеют одинаковую высоту изображения как у hero-секции
+              const imageHeight = 600;
               
               return (
                 <section
@@ -200,8 +198,8 @@ function App() {
                   ref={i === 0 ? firstSectionRef : undefined}
                   className="fullscreen-section"
                   style={{
-                    height: i === 0 ? 'auto' : `${100 / scale}vh`, // Автоматическая высота для hero-секции
-                    minHeight: i === 0 ? 'auto' : `${100 / scale}vh`, // Убираем минимальную высоту для hero-секции
+                    height: 'auto', // Автоматическая высота для всех секций
+                    minHeight: 'auto', // Убираем минимальную высоту для всех секций
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'flex-start'
@@ -260,7 +258,7 @@ function App() {
                       marginBottom: '16px',
                       height: `${imageHeight}px`,
                       width: '100%',
-                      flex: i === 0 ? 'none' : 1 // Убираем flex: 1 для hero-секции
+                      flex: 'none' // Фиксированный размер для всех секций
                     }}>
                     {section.galleryEnabled && section.gallery && section.gallery.length > 0 ? (
                       <SimpleGallery images={section.gallery} height={imageHeight} />
@@ -379,7 +377,7 @@ function App() {
         {/* Контент секций */}
         {visibleSections.map((section, i) => {
           // Простые размеры для мобильных
-          const imageHeight = windowWidth <= 600 ? 600 : 350;
+          const imageHeight = 600; // Унифицированная высота для всех секций как у hero
           const textSize = 1.8; // Увеличено для лучшей читаемости на мобильных
           
           return (
