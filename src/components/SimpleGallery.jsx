@@ -1,9 +1,12 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import React from 'react';
+import { GallerySkeleton } from './SkeletonLoading';
 
-export default function SimpleGallery({ images, height = 533 }) {
+export default React.memo(function SimpleGallery({ images, height = 533 }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [failedImages, setFailedImages] = useState(new Set());
+  const [loadedImages, setLoadedImages] = useState(new Set());
   const autoplayRef = useRef();
   const containerRef = useRef();
 
@@ -52,6 +55,11 @@ export default function SimpleGallery({ images, height = 533 }) {
   const handleImageError = (src) => {
     console.error('Ошибка загрузки изображения в галерее:', src);
     setFailedImages(prev => new Set([...prev, src]));
+  };
+
+  // Обработка успешной загрузки изображения
+  const handleImageLoad = (src) => {
+    setLoadedImages(prev => new Set([...prev, src]));
   };
 
   // Остановка автоплея при взаимодействии
@@ -108,7 +116,7 @@ export default function SimpleGallery({ images, height = 533 }) {
         justifyContent: 'center',
         color: '#666',
         fontSize: '1.2rem',
-                    fontFamily: "Helvetica Neue"
+        fontFamily: "Helvetica Neue"
       }}>
         Нет изображений
       </div>
@@ -162,17 +170,27 @@ export default function SimpleGallery({ images, height = 533 }) {
               Изображение недоступно
             </div>
           ) : (
-            <img
-              src={src}
-              alt={`Gallery image ${index + 1}`}
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                borderRadius: 8
-              }}
-              onError={() => handleImageError(src)}
-            />
+            <>
+              {/* Skeleton пока изображение загружается */}
+              {!loadedImages.has(src) && (
+                <GallerySkeleton height="100%" />
+              )}
+              <img
+                src={src}
+                alt={`Gallery image ${index + 1}`}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  borderRadius: 8,
+                  opacity: loadedImages.has(src) ? 1 : 0,
+                  transition: 'opacity 0.3s ease-in-out'
+                }}
+                loading="lazy"
+                onLoad={() => handleImageLoad(src)}
+                onError={() => handleImageError(src)}
+              />
+            </>
           )}
         </div>
       ))}
@@ -249,19 +267,18 @@ export default function SimpleGallery({ images, height = 533 }) {
           gap: 8,
           zIndex: 2
         }}>
-          {images.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => goToImage(index)}
+          {images.map((_, idx) => (
+            <span
+              key={idx}
+              onClick={() => goToImage(idx)}
               style={{
-                width: 8,
-                height: 8,
+                width: 10,
+                height: 10,
                 borderRadius: '50%',
-                border: 'none',
-                background: index === currentIndex ? '#fff' : 'rgba(255, 255, 255, 0.5)',
+                background: idx === currentIndex ? '#000' : '#ccc',
+                display: 'inline-block',
                 cursor: 'pointer',
-                transition: 'all 0.2s',
-                padding: 0
+                transition: 'background 0.2s'
               }}
             />
           ))}
@@ -269,4 +286,4 @@ export default function SimpleGallery({ images, height = 533 }) {
       )}
     </div>
   );
-} 
+}); 

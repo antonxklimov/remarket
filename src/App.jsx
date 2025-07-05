@@ -3,9 +3,13 @@ import Header from './components/Header'
 import Sidebar from './components/Sidebar'
 import AnimatedWord from './components/AnimatedWord'
 import MarqueeHeader from './components/MarqueeHeader'
+import AdminPanel from './components/AdminPanel'
+import LoginForm from './components/LoginForm'
 import './App.css'
 import { defaultSections } from './sectionsData'
 import SimpleGallery from './components/SimpleGallery'
+import { useAuth } from './hooks/useAuth'
+import AnimatedSection from './components/AnimatedSection'
 
 const API_BASE_URL = '/api';
 
@@ -13,7 +17,9 @@ function scrollToSection(e, id) {
   e.preventDefault();
   const mainContent = document.querySelector('.main-content');
   const target = document.getElementById(id);
-  
+  const header = document.querySelector('.marquee-header');
+  const offset = 45; // фиксированное смещение
+
   if (mainContent && target) {
     // Сбрасываем текущий скролл для правильного расчета
     const currentScrollTop = mainContent.scrollTop;
@@ -22,8 +28,8 @@ function scrollToSection(e, id) {
     const targetRect = target.getBoundingClientRect();
     const mainContentRect = mainContent.getBoundingClientRect();
     
-    // Вычисляем истинную позицию с учетом текущего скролла
-    const targetPosition = targetRect.top - mainContentRect.top + currentScrollTop;
+    // Вычисляем истинную позицию с учетом текущего скролла и offset
+    const targetPosition = targetRect.top - mainContentRect.top + currentScrollTop - offset;
     
     console.log('Scrolling to:', id, 'targetPosition:', targetPosition);
     mainContent.scrollTo({ 
@@ -192,18 +198,23 @@ function App() {
               const imageHeight = 600;
               
               return (
-                <section
-                  id={section.id}
+                <AnimatedSection
                   key={section.id}
-                  ref={i === 0 ? firstSectionRef : undefined}
-                  className="fullscreen-section"
-                  style={{
-                    height: 'auto', // Автоматическая высота для всех секций
-                    minHeight: 'auto', // Убираем минимальную высоту для всех секций
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'flex-start'
-                  }}>
+                  animation={i === 0 ? 'fadeInUp' : 'fadeInUp'}
+                  delay={i * 200}
+                  duration={800}
+                >
+                  <section
+                    id={section.id}
+                    ref={i === 0 ? firstSectionRef : undefined}
+                    className="fullscreen-section"
+                    style={{
+                      height: 'auto', // Автоматическая высота для всех секций
+                      minHeight: 'auto', // Убираем минимальную высоту для всех секций
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'flex-start'
+                    }}>
                   {i === 0 ? (
                     // Специальная структура для первой секции - заголовок и дата вертикально
                     <div style={{ 
@@ -288,6 +299,7 @@ function App() {
                             objectFit: 'cover', 
                             borderRadius: 8
                           }}
+                          loading="lazy"
                           onError={() => handleImageError(section.image)}
                         />
                       )
@@ -332,7 +344,8 @@ function App() {
                     }}
                     dangerouslySetInnerHTML={{ __html: section.text }}
                   />
-                </section>
+                  </section>
+                </AnimatedSection>
               );
             })}
           </div>
@@ -381,14 +394,19 @@ function App() {
           const textSize = 1.8; // Увеличено для лучшей читаемости на мобильных
           
           return (
-          <section
-            id={section.id}
-            key={section.id}
-            ref={i === 0 ? firstSectionRef : undefined}
-            style={{
-              marginBottom: '40px',
-              padding: `${i === 0 ? '0' : '40px'} 0 16px 0`
-            }}>
+            <AnimatedSection
+              key={section.id}
+              animation={i === 0 ? 'fadeInUp' : 'fadeInUp'}
+              delay={i * 150}
+              duration={600}
+            >
+              <section
+                id={section.id}
+                ref={i === 0 ? firstSectionRef : undefined}
+                style={{
+                  marginBottom: '40px',
+                  padding: `${i === 0 ? '0' : '40px'} 0 16px 0`
+                }}>
             {i === 0 ? (
               // Специальная структура для первой секции на мобильных
               <div style={{ width: '100%', marginBottom: 24, boxSizing: 'border-box' }}>
@@ -449,6 +467,7 @@ function App() {
                       objectFit: 'cover', 
                       borderRadius: 8
                     }}
+                    loading="lazy"
                     onError={() => handleImageError(section.image)}
                   />
                 )
@@ -475,7 +494,8 @@ function App() {
               dangerouslySetInnerHTML={{ __html: section.text }}
             />
             <hr style={{margin: '16px 0'}} />
-          </section>
+            </section>
+          </AnimatedSection>
           );
         })}
 

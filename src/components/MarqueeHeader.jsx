@@ -19,4 +19,4 @@ const MarqueeHeader = () => {
   );
 };
 
-export default MarqueeHeader; 
+export default React.memo(MarqueeHeader); 

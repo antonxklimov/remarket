@@ -8,14 +8,27 @@ import './index.css'
 import App from './App.jsx'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import AdminPanel from './components/AdminPanel.jsx'
+import LoginForm from './components/LoginForm.jsx'
+import { AuthProvider, useAuthContext } from './contexts/AuthContext.jsx'
+
+// Компонент-обертка для защищенного роута
+// function ProtectedAdminRoute() {
+//   const { isAuthenticated } = useAuthContext();
+//   if (!isAuthenticated) {
+//     return <LoginForm onLoginSuccess={() => window.location.reload()} />;
+//   }
+//   return <AdminPanel />;
+// }
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/admin" element={<AdminPanel />} />
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<App />} />
+          <Route path="/admin" element={<AdminPanel />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   </StrictMode>,
 )

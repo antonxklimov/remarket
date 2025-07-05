@@ -4,11 +4,13 @@ import { Editor } from 'react-draft-wysiwyg';
 import { EditorState, ContentState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
+import { useAuthContext } from '../contexts/AuthContext';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 const API_BASE_URL = '/api';
 
 export default function AdminPanel() {
+  const { getAuthHeaders, logout } = useAuthContext();
   const [sections, setSections] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -117,8 +119,13 @@ export default function AdminPanel() {
     formData.append('image', file);
     
     try {
+      const headers = getAuthHeaders();
+      // Удаляем Content-Type для FormData (браузер сам установит)
+      delete headers['Content-Type'];
+      
       const response = await fetch(`${API_BASE_URL}/upload`, {
         method: 'POST',
+        headers,
         body: formData,
       });
       
@@ -264,9 +271,7 @@ export default function AdminPanel() {
       
       const response = await fetch(`${API_BASE_URL}/data`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify({ sections: sectionsData }),
       });
       
@@ -327,8 +332,29 @@ export default function AdminPanel() {
     }}>
       <div style={{ maxWidth: 800, width: '100%', margin: '40px auto', background: '#f8f9fa', borderRadius: 16, padding: 40, fontFamily: "Helvetica Neue", color: '#000' }}>
         <div style={{ background: '#fff', borderRadius: 12, padding: 32, marginBottom: 32, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-          <h1 style={{ fontSize: 36, marginBottom: 8, fontWeight: 700 }}>Админка RE→MARKET</h1>
-          <p style={{ fontSize: 16, color: '#666', margin: 0 }}>Управление контентом и секциями сайта</p>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div>
+              <h1 style={{ fontSize: 36, marginBottom: 8, fontWeight: 700 }}>Админка RE→MARKET</h1>
+              <p style={{ fontSize: 16, color: '#666', margin: 0 }}>Управление контентом и секциями сайта</p>
+            </div>
+            <button 
+              onClick={logout}
+              style={{ 
+                background: '#dc3545', 
+                color: '#fff', 
+                border: 'none', 
+                borderRadius: 8, 
+                padding: '12px 20px', 
+                fontSize: 14, 
+                cursor: 'pointer',
+                transition: 'background-color 0.2s'
+              }}
+              onMouseEnter={(e) => e.target.style.background = '#c82333'}
+              onMouseLeave={(e) => e.target.style.background = '#dc3545'}
+            >
+              Выйти
+            </button>
+          </div>
         </div>
         {sections.map((s, i) => (
           <div key={s.id} style={{ 
@@ -555,6 +581,7 @@ export default function AdminPanel() {
                               borderRadius: 8, 
                               border: '1px solid #e9ecef' 
                             }}
+                            loading="lazy"
                             onError={(e) => {
                               console.error('Ошибка загрузки изображения:', img);
                               e.target.style.display = 'none';
@@ -636,6 +663,7 @@ export default function AdminPanel() {
                           borderRadius: 8, 
                           border: '1px solid #e9ecef' 
                         }}
+                        loading="lazy"
                         onError={(e) => {
                           console.error('Ошибка загрузки изображения:', s.image);
                           e.target.style.display = 'none';

@@ -4,7 +4,7 @@ const Testimonials = () => {
   return (
     <section className="testimonials-section">
       {/* Отзывы появятся позже */}
-      <h2>Отзывы клиентов</h2>
+      <h2>Отзывы</h2>
       <div className="testimonials-list">
         {/* Слайдер или список отзывов появится позже */}
       </div>
@@ -12,4 +12,4 @@ const Testimonials = () => {
   );
 };
 
-export default Testimonials; 
+export default React.memo(Testimonials); 

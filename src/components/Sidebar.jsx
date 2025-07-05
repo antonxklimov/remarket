@@ -50,4 +50,4 @@ const Sidebar = ({ onMenuClick, sections }) => {
   );
 };
 
-export default Sidebar; 
+export default React.memo(Sidebar); 

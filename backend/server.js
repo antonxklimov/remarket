@@ -3,7 +3,9 @@ const cors = require('cors');
 const fs = require('fs-extra');
 const path = require('path');
 const multer = require('multer');
-// const sharp = require('sharp');
+const sharp = require('sharp');
+const rateLimit = require('express-rate-limit');
+const { generateToken, verifyAdminPassword, requireAuth } = require('./auth');
 
 const app = express();
 const PORT = 3001;
@@ -19,16 +21,34 @@ async function ensureDirectories() {
     await fs.ensureDir(TEMP_UPLOADS_DIR);
 }
 
-// Функция для оптимизации изображений (временно отключена, просто копирует файл)
+// Функция для оптимизации изображений (ресайз 50% + качество 90%)
 async function optimizeImage(inputPath, outputPath) {
     try {
-        // Временно отключаем оптимизацию sharp до решения проблем с установкой на сервере
-        console.log('Копирую изображение без оптимизации (sharp временно отключен)');
-        await fs.copy(inputPath, outputPath);
-        console.log(`Изображение скопировано: ${outputPath}`);
-        return false; // Возвращаем false, чтобы показать что оптимизация не применена
+        const metadata = await sharp(inputPath).metadata();
+        console.log(`Обрабатываю изображение: ${metadata.width}x${metadata.height} -> ${Math.round(metadata.width * 0.5)}x${Math.round(metadata.height * 0.5)}`);
+        
+        const newWidth = Math.round(metadata.width * 0.5);
+        const newHeight = Math.round(metadata.height * 0.5);
+        
+        // Обрабатываем изображение: ресайз до 50% + качество 90%
+        let pipeline = sharp(inputPath)
+            .resize(newWidth, newHeight, {
+                fit: 'inside',
+                withoutEnlargement: true
+            });
+        if (metadata.format === 'jpeg' || metadata.format === 'jpg') {
+            pipeline = pipeline.jpeg({ quality: 90 });
+        } else if (metadata.format === 'png') {
+            pipeline = pipeline.png({ quality: 90 });
+        } else if (metadata.format === 'webp') {
+            pipeline = pipeline.webp({ quality: 90 });
+        }
+        await pipeline.toFile(outputPath);
+        
+        console.log(`Изображение оптимизировано: ${outputPath}`);
+        return true;
     } catch (error) {
-        console.error('Ошибка копирования изображения:', error);
+        console.error('Ошибка оптимизации изображения:', error);
         return false;
     }
 }
@@ -61,6 +81,13 @@ const upload = multer({
             cb(new Error('Разрешены только изображения'));
         }
     }
+});
+
+// Rate limiting для защиты от брутфорса
+const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 минут
+    max: 5, // максимум 5 попыток
+    message: { error: 'Слишком много попыток входа. Попробуйте позже.' }
 });
 
 // Middleware
@@ -111,6 +138,42 @@ async function saveData(sections) {
 
 // API Routes
 
+// POST /api/login - аутентификация админки
+app.post('/api/login', loginLimiter, async (req, res) => {
+    try {
+        const { password } = req.body;
+        
+        if (!password) {
+            return res.status(400).json({ error: 'Пароль обязателен' });
+        }
+        
+        const isValid = await verifyAdminPassword(password);
+        
+        if (isValid) {
+            const token = generateToken('admin');
+            res.json({ 
+                message: 'Успешная аутентификация',
+                token,
+                expiresIn: '24h'
+            });
+        } else {
+            res.status(401).json({ error: 'Неверный пароль' });
+        }
+    } catch (error) {
+        console.error('Ошибка аутентификации:', error);
+        res.status(500).json({ error: 'Ошибка сервера' });
+    }
+});
+
+// GET /api/health - проверка статуса API
+app.get('/api/health', (req, res) => {
+    res.json({
+        status: 'ok',
+        message: 'RE→MARKET Backend API работает',
+        timestamp: new Date().toISOString()
+    });
+});
+
 // GET /api/data - получить все секции
 app.get('/api/data', async (req, res) => {
     try {
@@ -122,8 +185,8 @@ app.get('/api/data', async (req, res) => {
     }
 });
 
-// POST /api/data - сохранить все секции
-app.post('/api/data', async (req, res) => {
+// POST /api/data - сохранить все секции (требует аутентификации)
+app.post('/api/data', requireAuth, async (req, res) => {
     try {
         const { sections } = req.body;
         
@@ -144,8 +207,8 @@ app.post('/api/data', async (req, res) => {
     }
 });
 
-// POST /api/upload - загрузка изображений с автоматической оптимизацией
-app.post('/api/upload', (req, res) => {
+// POST /api/upload - загрузка изображений с автоматической оптимизацией (требует аутентификации)
+app.post('/api/upload', requireAuth, (req, res) => {
     upload.single('image')(req, res, async (err) => {
         if (err instanceof multer.MulterError) {
             console.error('Ошибка multer:', err);

@@ -370,9 +370,9 @@ html {
     font-size: 1.35rem;
   }
   .mobile-menu-nav__link:hover {
-    font-style: italic;
-    font-weight: normal;
-  }
+  font-style: italic;
+  font-weight: 800;
+}
   .mobile-menu-links {
     margin-left: 24px;
     margin-top: 32px;
@@ -385,9 +385,9 @@ html {
     text-decoration: none;
   }
   .mobile-menu-links a:hover {
-    font-style: italic;
-    font-weight: normal;
-  }
+  font-style: italic;
+  font-weight: 800;
+}
   .mobile-menu-copyright {
     margin-left: 24px;
     margin-top: auto;
@@ -400,9 +400,9 @@ html {
     text-decoration: none;
   }
   .mobile-menu-copyright a:hover {
-    font-style: italic;
-    font-weight: normal;
-  }
+  font-style: italic;
+  font-weight: 800;
+}
   .mobile-header {
     display: flex;
     align-items: center;
@@ -512,7 +512,7 @@ html {
 .sidebar__nav li a:hover {
   color: inherit;
   font-style: italic;
-  font-weight: normal !important;
+  font-weight: 800 !important;
 }
 
 .sidebar__links {
@@ -530,7 +530,7 @@ html {
 .sidebar__links a:hover {
   color: inherit;
   font-style: italic;
-  font-weight: normal;
+  font-weight: 800;
   text-decoration: none;
 }
 .sidebar__copyright {
@@ -1141,7 +1141,7 @@ hr, .hero-block__secondary-hr {
 }
 .mobile-menu-close-minimal:hover {
   font-style: italic;
-  font-weight: normal;
+  font-weight: 800;
 }
 .mobile-menu-list-minimal {
   list-style: none;
@@ -1170,7 +1170,7 @@ hr, .hero-block__secondary-hr {
 .mobile-menu-list-minimal a:hover {
   color: inherit;
   font-style: italic;
-  font-weight: normal;
+  font-weight: 800;
 }
 
 .mobile-menu-links-minimal {
@@ -1195,7 +1195,7 @@ hr, .hero-block__secondary-hr {
 .mobile-menu-links-minimal a:hover {
   color: inherit;
   font-style: italic;
-  font-weight: normal;
+  font-weight: 800;
 }
 .mobile-menu-content {
   display: flex;
@@ -1218,7 +1218,7 @@ hr, .hero-block__secondary-hr {
 .mobile-menu-copyright-minimal .sidebar__studio-link:hover {
   color: inherit;
   font-style: italic;
-  font-weight: normal;
+  font-weight: 800;
   text-decoration: none;
 }
 
@@ -1449,4 +1449,10 @@ div.main-content-inner section div[style*="fontSize"] {
 .menu-link:hover, .menu-link:focus {
   font-style: italic;
   font-weight: 800;
+}
+
+@media (max-width: 600px) {
+  .main-content-inner h1.hero-title {
+    margin-top: 32px !important;
+  }
 }

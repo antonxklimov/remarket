@@ -14,4 +14,4 @@ const AnimatedWord = ({ className = '', style = {} }) => {
   );
 };
 
-export default AnimatedWord; 
+export default React.memo(AnimatedWord); 

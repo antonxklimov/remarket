@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://85.192.30.220.nip.io/sitemap.xml
+
+# Disallow admin panel
+Disallow: /admin
+Disallow: /api/
+
+# Crawl delay
+Crawl-delay: 1 

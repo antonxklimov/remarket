@@ -84,4 +84,4 @@ const Header = ({ sections, onMenuClick }) => {
   );
 };
 
-export default Header; 
+export default React.memo(Header); 
