@@ -34,7 +34,12 @@ fi
 echo -e "${BLUE}🛑 Останавливаю старый backend процесс...${NC}"
 ssh -i $SSH_KEY $SERVER_USER@$SERVER_IP "pkill -f 'node.*server.js' || true"
 
-# Шаг 4: Полностью очищаем папки на сервере
+# Шаг 4: Сохраняем контент перед очисткой
+echo -e "${YELLOW}💾 Сохраняю контент (data и uploads) перед очисткой...${NC}"
+ssh -i $SSH_KEY $SERVER_USER@$SERVER_IP "mkdir -p /tmp/backup_deploy && cp -r $BACKEND_PATH/data /tmp/backup_deploy/ 2>/dev/null || echo 'папка data не найдена для бекапа'"
+ssh -i $SSH_KEY $SERVER_USER@$SERVER_IP "cp -r $BACKEND_PATH/uploads /tmp/backup_deploy/ 2>/dev/null || echo 'папка uploads не найдена для бекапа'"
+
+# Шаг 5: Полностью очищаем папки на сервере
 echo -e "${YELLOW}🧹 Полностью очищаю папки на сервере...${NC}"
 ssh -i $SSH_KEY $SERVER_USER@$SERVER_IP "echo '$PASSWORD' | sudo -S rm -rf $SERVER_PATH/* $SERVER_PATH/.* 2>/dev/null || true"
 ssh -i $SSH_KEY $SERVER_USER@$SERVER_IP "rm -rf $BACKEND_PATH/* $BACKEND_PATH/.* 2>/dev/null || true"
@@ -49,8 +54,15 @@ scp -i $SSH_KEY -r dist/* $SERVER_USER@$SERVER_IP:$SERVER_PATH/
 echo -e "${BLUE}📤 Загружаю backend файлы на сервер...${NC}"
 scp -i $SSH_KEY backend/package.json $SERVER_USER@$SERVER_IP:$BACKEND_PATH/
 scp -i $SSH_KEY backend/server.js $SERVER_USER@$SERVER_IP:$BACKEND_PATH/
-scp -i $SSH_KEY -r backend/data $SERVER_USER@$SERVER_IP:$BACKEND_PATH/ 2>/dev/null || echo "папка data не найдена"
-scp -i $SSH_KEY -r backend/uploads $SERVER_USER@$SERVER_IP:$BACKEND_PATH/ 2>/dev/null || echo "папка uploads не найдена"
+
+# Восстанавливаем данные из бекапа, если они есть
+echo -e "${BLUE}🔄 Восстанавливаю сохраненный контент...${NC}"
+ssh -i $SSH_KEY $SERVER_USER@$SERVER_IP "cp -r /tmp/backup_deploy/data $BACKEND_PATH/ 2>/dev/null || echo 'нет данных для восстановления'"
+ssh -i $SSH_KEY $SERVER_USER@$SERVER_IP "cp -r /tmp/backup_deploy/uploads $BACKEND_PATH/ 2>/dev/null || echo 'нет изображений для восстановления'"
+
+# Если локальные папки существуют, приоритет у них (для первого деплоя)
+scp -i $SSH_KEY -r backend/data $SERVER_USER@$SERVER_IP:$BACKEND_PATH/ 2>/dev/null || echo "папка data не найдена локально"
+scp -i $SSH_KEY -r backend/uploads $SERVER_USER@$SERVER_IP:$BACKEND_PATH/ 2>/dev/null || echo "папка uploads не найдена локально"
 
 # Шаг 7: Устанавливаем зависимости backend на сервере
 echo -e "${BLUE}📦 Устанавливаю зависимости backend на сервере...${NC}"
@@ -123,6 +135,10 @@ ssh -i $SSH_KEY $SERVER_USER@$SERVER_IP "du -sh $BACKEND_PATH"
 # Шаг 15: Показываем текущий коммит
 echo -e "${YELLOW}📋 Текущий коммит:${NC}"
 git log --oneline -1
+
+# Очищаем временную папку бекапа
+echo -e "${YELLOW}🧹 Очищаю временную папку бекапа...${NC}"
+ssh -i $SSH_KEY $SERVER_USER@$SERVER_IP "rm -rf /tmp/backup_deploy"
 
 echo -e "${GREEN}✅ Деплой завершен успешно!${NC}"
 echo -e "${GREEN}🌐 Сайт доступен по адресу: http://$SERVER_IP${NC}"
