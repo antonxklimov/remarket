@@ -298,7 +298,7 @@ export default function AdminPanel() {
         alignItems: 'center',
         justifyContent: 'center',
         fontSize: 18,
-        fontFamily: 'Helvetica Neue',
+        fontFamily: "Helvetica Neue",
         color: '#111',
       }}>
         <div style={{ textAlign: 'center' }}>
@@ -316,7 +316,7 @@ export default function AdminPanel() {
       background: '#fff',
       overflowY: 'auto',
       fontSize: 18,
-      fontFamily: 'Helvetica Neue',
+      fontFamily: "Helvetica Neue",
       color: '#111',
       padding: 0,
       margin: 0,
@@ -325,7 +325,7 @@ export default function AdminPanel() {
       alignItems: 'center',
       justifyContent: 'flex-start',
     }}>
-      <div style={{ maxWidth: 800, width: '100%', margin: '40px auto', background: '#f8f9fa', borderRadius: 16, padding: 40, fontFamily: 'Helvetica Neue', color: '#000' }}>
+      <div style={{ maxWidth: 800, width: '100%', margin: '40px auto', background: '#f8f9fa', borderRadius: 16, padding: 40, fontFamily: "Helvetica Neue", color: '#000' }}>
         <div style={{ background: '#fff', borderRadius: 12, padding: 32, marginBottom: 32, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
           <h1 style={{ fontSize: 36, marginBottom: 8, fontWeight: 700 }}>Админка RE→MARKET</h1>
           <p style={{ fontSize: 16, color: '#666', margin: 0 }}>Управление контентом и секциями сайта</p>
@@ -444,7 +444,7 @@ export default function AdminPanel() {
                     border: '1px solid #e9ecef', 
                     background: '#fff', 
                     color: '#000', 
-                    fontFamily: 'Helvetica Neue',
+                    fontFamily: "Helvetica Neue",
                     transition: 'border-color 0.2s'
                   }} 
                   placeholder="Введите название секции"

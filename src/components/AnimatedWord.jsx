@@ -1,38 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
-const AnimatedWord = ({ words = ['Пятый', 'Юбилейный', 'Классный', 'Модный'], className = '', style = {} }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isBlurred, setIsBlurred] = useState(false);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      // Начинаем блюр
-      setIsBlurred(true);
-      
-      // Через 300ms меняем слово
-      setTimeout(() => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % words.length);
-        
-        // Через еще 100ms убираем блюр
-        setTimeout(() => {
-          setIsBlurred(false);
-        }, 100);
-      }, 300);
-    }, 3000); // Меняем слово каждые 3 секунды
-
-    return () => clearInterval(interval);
-  }, [words.length]);
-
+const AnimatedWord = ({ className = '', style = {} }) => {
   return (
     <span 
       className={`animated-word ${className}`}
       style={{
         ...style,
-        transition: 'filter 0.3s ease-in-out',
-        filter: isBlurred ? 'blur(5px)' : 'blur(0px)',
+        display: 'inline-block',
       }}
     >
-      {words[currentIndex]}
+      пятый юбилейный
     </span>
   );
 };

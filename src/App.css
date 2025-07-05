@@ -2,6 +2,46 @@
   box-sizing: border-box;
 }
 
+/* Бегущая строка */
+.marquee-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: #000;
+  z-index: 999999;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.marquee-content {
+  display: flex;
+  white-space: nowrap;
+  animation: marquee 60s linear infinite;
+  will-change: transform;
+}
+
+.marquee-text {
+  color: #fff;
+  font-family: "Helvetica Neue";
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+  display: inline-block;
+  margin-right: 80px;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
 html {
   font-size: 10px;
   scroll-behavior: smooth;
@@ -149,7 +189,7 @@ html {
   letter-spacing: 0em;
   text-align: left;
   align-self: flex-start;
-  font-family: "Diatype Variable", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue";
   color: rgba(0,0,0,0.85);
 }
 .hero-block__slider {
@@ -184,7 +224,7 @@ html {
   text-align: left;
   align-self: flex-start;
   font-weight: 400;
-  font-family: "Diatype Variable", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue";
 }
 .hero-block__secondary {
   margin-top: 0;
@@ -205,7 +245,7 @@ html {
   font-weight: 400;
   line-height: 1;
   color: rgba(0,0,0,0.85);
-  font-family: "Diatype Variable", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue";
 }
 .hero-block__secondary-text {
   font-size: 1.4rem;
@@ -216,7 +256,7 @@ html {
   text-align: left;
   align-self: flex-start;
   font-weight: 400;
-  font-family: "Diatype Variable", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue";
 }
 
 @media (max-width: 1200px) {
@@ -478,7 +518,7 @@ html {
 .sidebar__links {
   margin-bottom: 24px;
   line-height: 1.2;
-  font-size: 1.0rem;
+  font-size: 1.5rem;
   margin-top: 48px;
   font-weight: 800;
 }
@@ -490,7 +530,7 @@ html {
 .sidebar__links a:hover {
   color: inherit;
   font-style: italic;
-  font-weight: 800;
+  font-weight: normal;
   text-decoration: none;
 }
 .sidebar__copyright {
@@ -549,7 +589,7 @@ html {
 }
 
 body, .layout {
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue";
   background: #fff;
   color: #000;
 }
@@ -777,7 +817,7 @@ body.mobile-menu-open {
 }
 
 h1, .hero-block__title, .hero-block__secondary-title {
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue";
   font-size: 30px !important;
   font-weight: 900;
   margin: 0;
@@ -909,6 +949,7 @@ hr, .hero-block__secondary-hr {
     padding: 18px 4px;
     height: auto;
     overflow-y: visible;
+    padding-top: 58px; /* Учитываем высоту бегущей строки */
   }
   .hero-block__image-placeholder {
     width: 100%;
@@ -931,22 +972,18 @@ hr, .hero-block__secondary-hr {
   font-weight: 800;
   line-height: 1;
   color: #000;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue";
   letter-spacing: 0em;
 }
 
 /* Специальные классы для больших заголовков */
 
 .main-content-inner h1.hero-title {
-  font-size: 9rem !important;
+  font-size: 8rem !important;
   font-weight: 700 !important;
-  line-height: 1.1 !important;
+  line-height: 0.9 !important;
   padding-top: 0 !important;
-  cursor: pointer;
-}
-.main-content-inner h1.hero-title:hover {
-  font-style: italic;
-  font-weight: normal !important;
+  text-transform: uppercase !important;
 }
 
 @media (max-width: 900px) {
@@ -980,14 +1017,10 @@ hr, .hero-block__secondary-hr {
   /* Мобильные версии больших заголовков */
   
   .main-content-inner h1.hero-title {
-    font-size: 5rem !important;
+    font-size: 4.4rem !important;
     padding-top: 0 !important;
-    line-height: 1.1 !important;
-    cursor: pointer;
-  }
-  .main-content-inner h1.hero-title:hover {
-    font-style: italic;
-    font-weight: normal !important;
+    line-height: 0.9 !important;
+    text-transform: uppercase !important;
   }
   .hero-block__caption,
   .main-content-inner p {
@@ -1027,7 +1060,7 @@ hr, .hero-block__secondary-hr {
 .sidebar__links a:hover {
   color: inherit;
   font-style: italic;
-  font-weight: 800;
+  font-weight: normal;
   text-decoration: none;
 }
 
@@ -1132,7 +1165,7 @@ hr, .hero-block__secondary-hr {
   font-weight: 800;
   position: relative;
   overflow: hidden;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue";
 }
 .mobile-menu-list-minimal a:hover {
   color: inherit;
@@ -1147,22 +1180,22 @@ hr, .hero-block__secondary-hr {
   font-weight: 800;
   line-height: 1.0;
   padding: 0 24px;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue";
   margin-top: 48px;
 }
 .mobile-menu-links-minimal a {
   color: #000;
   text-decoration: none;
-  font-size: 1.0rem;
+  font-size: 1.5rem;
   font-weight: 800;
   display: block;
   margin-bottom: 3px;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue";
 }
 .mobile-menu-links-minimal a:hover {
   color: inherit;
   font-style: italic;
-  font-weight: 800;
+  font-weight: normal;
 }
 .mobile-menu-content {
   display: flex;
@@ -1176,7 +1209,7 @@ hr, .hero-block__secondary-hr {
   color: #000;
   text-align: left;
   padding: 8px 24px 24px 24px;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue";
 }
 .mobile-menu-copyright-minimal .sidebar__studio-link {
   color: inherit;
@@ -1199,7 +1232,7 @@ hr, .hero-block__secondary-hr {
 .main-content-inner p {
   font-size: 2.0rem;
   color: #000;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue";
 }
 
 /* Правильная типографика для текста */
@@ -1354,7 +1387,7 @@ hr, .hero-block__secondary-hr {
   position: fixed;
   top: 24px;
   right: 48px;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue";
   font-size: 20px;
   font-weight: 700;
   color: #000;

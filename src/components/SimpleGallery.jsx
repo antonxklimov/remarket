@@ -114,7 +114,7 @@ export default function SimpleGallery({ images, height = 533 }) {
         justifyContent: 'center',
         color: '#666',
         fontSize: '1.2rem',
-        fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif'
+                    fontFamily: "Helvetica Neue"
       }}>
         Нет изображений
       </div>
@@ -165,7 +165,7 @@ export default function SimpleGallery({ images, height = 533 }) {
               justifyContent: 'center',
               color: '#666',
               fontSize: '1.2rem',
-              fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif'
+              fontFamily: "Helvetica Neue"
             }}>
               Изображение недоступно
             </div>

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useLayoutEffect } from 'react'
 import Header from './components/Header'
 import Sidebar from './components/Sidebar'
 import AnimatedWord from './components/AnimatedWord'
+import MarqueeHeader from './components/MarqueeHeader'
 import './App.css'
 import { defaultSections } from './sectionsData'
 import SimpleGallery from './components/SimpleGallery'
@@ -138,7 +139,7 @@ function App() {
         alignItems: 'center',
         justifyContent: 'center',
         fontSize: 18,
-        fontFamily: 'Helvetica Neue',
+                  fontFamily: "Helvetica Neue",
         color: '#111',
       }}>
         <div style={{ textAlign: 'center' }}>
@@ -154,17 +155,12 @@ function App() {
   if (windowWidth > 900) {
     // Десктоп: sidebar виден, main-content со scale
     return (
-      <div className="layout">
-        <Sidebar onMenuClick={scrollToSection} sections={visibleSections} />
+      <>
+        <MarqueeHeader />
+        <div className="layout" style={{ marginTop: '40px' }}>
+          <Sidebar onMenuClick={scrollToSection} sections={visibleSections} />
         
-        {/* Фиксированная дата в верхней правой части экрана */}
-        <div className="fixed-date-desktop" style={{
-          transform: `scale(${scale})`,
-          transformOrigin: 'top right'
-        }}>
-          → 3 августа 2025<br />
-          <span className="date-arrow">стрелка</span>
-        </div>
+
         
         <main className="main-content">
           <div
@@ -224,10 +220,12 @@ function App() {
                           marginBottom: '16px',
                           textAlign: 'left',
                           color: '#000',
-                          fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif'
+                          fontFamily: "Helvetica Neue",
+                          textTransform: 'uppercase',
+                          lineHeight: '0.9'
                         }}
                       >
-                        <AnimatedWord /><br />фестиваль локальных брендов RE→MARKET
+                        <AnimatedWord /><br />фестиваль локальных брендов <span style={{fontStyle: 'italic'}}>RE→MARKET</span>
                       </h1>
                     </div>
                   ) : (
@@ -247,7 +245,7 @@ function App() {
                         margin: 0, 
                         flex: 1,
                         color: '#000',
-                        fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif'
+                        fontFamily: "Helvetica Neue"
                       }}>{section.title}</h1>
                     </div>
                   )}
@@ -278,7 +276,7 @@ function App() {
                           justifyContent: 'center',
                           color: '#666',
                           fontSize: '1.2rem',
-                          fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif'
+                          fontFamily: "Helvetica Neue"
                         }}>
                           Изображение недоступно
                         </div>
@@ -308,7 +306,7 @@ function App() {
                           justifyContent: 'center',
                           color: '#000',
                           fontSize: '1.2rem',
-                          fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif'
+                          fontFamily: "Helvetica Neue"
                         }}>
                         Изображение
                       </div>
@@ -327,7 +325,7 @@ function App() {
                       padding: '16px 0',
                       boxSizing: 'border-box',
                       flexShrink: 0,
-                      fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+                      fontFamily: "Helvetica Neue",
                       wordWrap: 'break-word',
                       overflowWrap: 'break-word',
                       wordBreak: 'normal',
@@ -342,13 +340,16 @@ function App() {
           </div>
         </main>
       </div>
+      </>
     );
   }
 
   // Планшет и мобильная версия: sidebar скрыт
   return (
-    <main className="main-content">
-      <Header sections={visibleSections} onMenuClick={scrollToSection} />
+    <>
+      <MarqueeHeader />
+      <main className="main-content" style={{ marginTop: '40px' }}>
+        <Header sections={visibleSections} onMenuClick={scrollToSection} />
       <div
         className="main-content-inner"
         style={
@@ -398,10 +399,12 @@ function App() {
                   style={{
                     marginBottom: '16px',
                     color: '#000',
-                    fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif'
+                    fontFamily: "Helvetica Neue",
+                    textTransform: 'uppercase',
+                    lineHeight: '0.9'
                   }}
                 >
-                  <AnimatedWord /><br />фестиваль локальных брендов RE→MARKET
+                  <AnimatedWord /><br />фестиваль локальных брендов <span style={{fontStyle: 'italic'}}>RE→MARKET</span>
                 </h1>
               </div>
             ) : (
@@ -411,7 +414,7 @@ function App() {
                   fontSize: '2.5rem', 
                   marginBottom: '24px',
                   color: '#000',
-                  fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif'
+                  fontFamily: "Helvetica Neue"
                 }}>{section.title}</h1>
               </div>
             )}
@@ -434,7 +437,7 @@ function App() {
                     justifyContent: 'center',
                     color: '#666',
                     fontSize: '1.2rem',
-                    fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif'
+                    fontFamily: "Helvetica Neue"
                   }}>
                     Изображение недоступно
                   </div>
@@ -452,7 +455,7 @@ function App() {
                   />
                 )
               ) : (
-                <div style={{width: '100%', height: '100%', background: '#f5f5f5', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#000', fontSize: '1.2rem', fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif'}}>
+                <div style={{width: '100%', height: '100%', background: '#f5f5f5', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#000', fontSize: '1.2rem', fontFamily: "Helvetica Neue"}}>
                   Изображение
                 </div>
               )}
@@ -464,7 +467,7 @@ function App() {
                 marginBottom: '16px', 
                 height: 'auto', // Автоматическая высота для мобильных
                 overflow: 'visible', // Убираем скролл для мобильных
-                fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+                fontFamily: "Helvetica Neue",
                 wordWrap: 'break-word',
                 overflowWrap: 'break-word',
                 wordBreak: 'normal',
@@ -480,6 +483,7 @@ function App() {
 
       </div>
     </main>
+    </>
   );
 }
 
