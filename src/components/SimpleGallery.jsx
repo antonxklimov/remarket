@@ -12,10 +12,8 @@ export default function SimpleGallery({ images, height = 533 }) {
     if (isTransitioning) return;
     
     setIsTransitioning(true);
-    setTimeout(() => {
-      setCurrentIndex((prev) => (prev + 1) % images.length);
-      setTimeout(() => setIsTransitioning(false), 50);
-    }, 300);
+    setCurrentIndex((prev) => (prev + 1) % images.length);
+    setTimeout(() => setIsTransitioning(false), 400);
   }, [isTransitioning, images.length]);
 
   // Автоплей
@@ -37,10 +35,8 @@ export default function SimpleGallery({ images, height = 533 }) {
     if (isTransitioning) return;
     
     setIsTransitioning(true);
-    setTimeout(() => {
-      setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
-      setTimeout(() => setIsTransitioning(false), 50);
-    }, 300);
+    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
+    setTimeout(() => setIsTransitioning(false), 400);
   };
 
   // Переход к конкретному изображению
@@ -48,10 +44,8 @@ export default function SimpleGallery({ images, height = 533 }) {
     if (isTransitioning || index === currentIndex) return;
     
     setIsTransitioning(true);
-    setTimeout(() => {
-      setCurrentIndex(index);
-      setTimeout(() => setIsTransitioning(false), 50);
-    }, 300);
+    setCurrentIndex(index);
+    setTimeout(() => setIsTransitioning(false), 400);
   };
 
   // Обработка ошибок загрузки изображений
@@ -149,9 +143,7 @@ export default function SimpleGallery({ images, height = 533 }) {
             width: '100%',
             height: '100%',
             opacity: index === currentIndex ? 1 : 0,
-            transition: 'opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-            filter: isTransitioning ? 'blur(8px)' : 'blur(0px)',
-            transform: isTransitioning ? 'scale(1.02)' : 'scale(1)',
+            transition: 'opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
             zIndex: index === currentIndex ? 1 : 0
           }}
         >
