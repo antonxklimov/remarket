@@ -32,7 +32,7 @@ const storage = multer.diskStorage({
 const upload = multer({ 
     storage: storage,
     limits: {
-        fileSize: 10 * 1024 * 1024, // 10MB лимит
+        fileSize: 50 * 1024 * 1024, // 50MB лимит
         files: 1 // Максимум 1 файл за раз
     },
     fileFilter: (req, file, cb) => {
@@ -47,7 +47,7 @@ const upload = multer({
 
 // Middleware
 app.use(cors());
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json({ limit: '50mb' }));
 app.use('/uploads', express.static(UPLOADS_DIR));
 
 // Начальные данные по умолчанию
@@ -132,7 +132,7 @@ app.post('/api/upload', (req, res) => {
         if (err instanceof multer.MulterError) {
             console.error('Ошибка multer:', err);
             if (err.code === 'LIMIT_FILE_SIZE') {
-                return res.status(400).json({ error: 'Файл слишком большой. Максимум 10MB.' });
+                return res.status(400).json({ error: 'Файл слишком большой. Максимум 50MB.' });
             }
             return res.status(400).json({ error: `Ошибка загрузки: ${err.message}` });
         } else if (err) {
