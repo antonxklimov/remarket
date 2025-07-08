@@ -11,7 +11,8 @@ import SimpleGallery from './components/SimpleGallery'
 import { useAuth } from './hooks/useAuth'
 import AnimatedSection from './components/AnimatedSection'
 
-const API_BASE_URL = '/api';
+const isDev = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+const API_BASE_URL = isDev ? 'https://remarket.cc/api' : '/api';
 
 function scrollToSection(e, id) {
   e.preventDefault();
@@ -326,25 +327,9 @@ function App() {
                     )}
                   </div>
                   
-                  {/* Текст - без скролла, адаптивная высота */}
+                  {/* Унифицированный блок дополнительного текста */}
                   <div
-                    style={{
-                      fontSize: '2.0rem', 
-                      color: '#000', 
-                      lineHeight: 1.5,
-                      minHeight: `${Math.min(textHeight, 120)}px`,
-                      maxHeight: `${textHeight}px`,
-                      overflow: 'hidden',
-                      padding: '16px 0',
-                      boxSizing: 'border-box',
-                      flexShrink: 0,
-                      fontFamily: "Helvetica Neue",
-                      wordWrap: 'break-word',
-                      overflowWrap: 'break-word',
-                      wordBreak: 'normal',
-                      whiteSpace: 'normal',
-                      hyphens: 'none'
-                    }}
+                    className="section-description"
                     dangerouslySetInnerHTML={{ __html: section.text }}
                   />
                   </section>
@@ -363,7 +348,7 @@ function App() {
     <>
       {/* Скрываем бегущую строку при открытом меню на мобильных */}
       {!(windowWidth <= 900 && mobileMenuOpen) && <MarqueeHeader />}
-      <main className="main-content" style={{ marginTop: '40px' }}>
+      <main className="main-content" style={{ marginTop: 0 }}>
         <Header 
           sections={visibleSections} 
           onMenuClick={(e, id) => {
@@ -378,8 +363,9 @@ function App() {
               }
               if (!target && section) target = section;
               if (target) {
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                console.log('scrollIntoView called for', id, 'target:', target);
+                const headerOffset = 80; // высота бегущей строки + меню
+                const y = target.getBoundingClientRect().top + window.scrollY - headerOffset;
+                window.scrollTo({ top: y, behavior: 'smooth' });
               } else {
                 // Fallback: scroll window
                 const y = section ? section.getBoundingClientRect().top + window.scrollY - 24 : 0;
@@ -435,7 +421,7 @@ function App() {
                 ref={i === 0 ? firstSectionRef : undefined}
                 style={{
                   marginBottom: '40px',
-                  padding: `${i === 0 ? '0' : '40px'} 0 16px 0`
+                  padding: `${i === 0 ? '40px' : '40px'} 0 16px 0`
                 }}>
             {i === 0 ? (
               // Специальная структура для первой секции на мобильных
@@ -508,19 +494,7 @@ function App() {
               )}
             </div>
             <div
-              style={{
-                fontSize: `${textSize}rem`, 
-                color: '#000', 
-                marginBottom: '16px', 
-                height: 'auto', // Автоматическая высота для мобильных
-                overflow: 'visible', // Убираем скролл для мобильных
-                fontFamily: "Helvetica Neue",
-                wordWrap: 'break-word',
-                overflowWrap: 'break-word',
-                wordBreak: 'normal',
-                whiteSpace: 'normal',
-                hyphens: 'none'
-              }}
+              className="section-description"
               dangerouslySetInnerHTML={{ __html: section.text }}
             />
             <hr style={{margin: '16px 0'}} />
