@@ -271,9 +271,9 @@ function App() {
                       alignItems: 'center',
                       justifyContent: 'center',
                       marginBottom: '16px',
-                      height: `${imageHeight}px`,
                       width: '100%',
-                      flex: 'none' // Фиксированный размер для всех секций
+                      flex: 'none', // Фиксированный размер для всех секций
+                      ...(windowWidth <= 900 ? { aspectRatio: '1 / 1' } : { height: `${imageHeight}px` })
                     }}>
                     {section.galleryEnabled && section.gallery && section.gallery.length > 0 ? (
                       <SimpleGallery images={section.gallery} height={imageHeight} />
@@ -300,7 +300,7 @@ function App() {
                           style={{
                             width: '100%', 
                             height: '100%',
-                            objectFit: 'cover', 
+                            objectFit: windowWidth <= 900 ? 'contain' : 'cover',
                             borderRadius: 8
                           }}
                           loading="lazy"
@@ -450,10 +450,10 @@ function App() {
                 }}>{section.title}</h1>
               </div>
             )}
-            <div style={{ 
-              height: `${imageHeight}px`,
+            <div style={{
               width: '100%',
-              marginBottom: '16px'
+              marginBottom: '16px',
+              ...(windowWidth <= 900 ? { aspectRatio: '1 / 1' } : { height: `${imageHeight}px` })
             }}>
               {section.galleryEnabled && section.gallery && section.gallery.length > 0 ? (
                 <SimpleGallery images={section.gallery} height={imageHeight} />
@@ -480,7 +480,7 @@ function App() {
                     style={{
                       width: '100%', 
                       height: '100%', 
-                      objectFit: 'cover', 
+                      objectFit: windowWidth <= 900 ? 'contain' : 'cover',
                       borderRadius: 8
                     }}
                     loading="lazy"

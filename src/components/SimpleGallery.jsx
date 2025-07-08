@@ -128,7 +128,9 @@ export default React.memo(function SimpleGallery({ images, height = 533 }) {
       ref={containerRef}
       style={{
         width: '100%',
-        height: height,
+        ...(typeof window !== 'undefined' && window.innerWidth <= 900
+          ? { aspectRatio: '1 / 1' }
+          : { height }),
         position: 'relative',
         borderRadius: 8,
         overflow: 'hidden',
@@ -181,7 +183,7 @@ export default React.memo(function SimpleGallery({ images, height = 533 }) {
                 style={{
                   width: '100%',
                   height: '100%',
-                  objectFit: 'cover',
+                  objectFit: (typeof window !== 'undefined' && window.innerWidth <= 900) ? 'contain' : 'cover',
                   borderRadius: 8,
                   opacity: loadedImages.has(src) ? 1 : 0,
                   transition: 'opacity 0.3s ease-in-out'
