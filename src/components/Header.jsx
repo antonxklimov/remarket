@@ -7,8 +7,7 @@ const extraLinks = [
   { label: 'telegram', href: 'https://t.me/remarket24' },
 ];
 
-const Header = ({ sections, onMenuClick }) => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+const Header = ({ sections, onMenuClick, mobileMenuOpen, setMobileMenuOpen }) => {
   const visibleSections = sections ? sections.filter(s => !s.hidden) : [];
 
   useEffect(() => {
@@ -37,8 +36,8 @@ const Header = ({ sections, onMenuClick }) => {
         </button>
       </div>
       {mobileMenuOpen && (
-        <div className="mobile-menu-overlay" onClick={() => setMobileMenuOpen(false)}>
-          <div className="mobile-menu-panel" onClick={e => e.stopPropagation()}>
+        <div className="mobile-menu-overlay animated-fade-slide" onClick={() => setMobileMenuOpen(false)}>
+          <div className="mobile-menu-panel animated-fade-slide" onClick={e => e.stopPropagation()}>
             <div className="mobile-menu-header-minimal">
               <img src={Logo} alt="RE→MARKET logo" className="mobile-header__logo" />
               <button 

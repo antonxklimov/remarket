@@ -49,6 +49,8 @@ function App() {
   // Новый breakpoint 560px
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth <= 560);
   const [windowWidth, setWindowWidth] = useState(() => typeof window !== 'undefined' ? window.innerWidth : 1200);
+  // Новое состояние для мобильного меню
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   useLayoutEffect(() => {
     function handleResize() {
       setIsMobile(window.innerWidth <= 560);
@@ -162,7 +164,8 @@ function App() {
     // Десктоп: sidebar виден, main-content со scale
     return (
       <>
-        <MarqueeHeader />
+        {/* Скрываем бегущую строку при открытом меню на мобильных */}
+        {!(windowWidth <= 900 && mobileMenuOpen) && <MarqueeHeader />}
         <div className="layout" style={{ marginTop: '40px' }}>
           <Sidebar onMenuClick={scrollToSection} sections={visibleSections} />
         
@@ -358,9 +361,36 @@ function App() {
   // Планшет и мобильная версия: sidebar скрыт
   return (
     <>
-      <MarqueeHeader />
+      {/* Скрываем бегущую строку при открытом меню на мобильных */}
+      {!(windowWidth <= 900 && mobileMenuOpen) && <MarqueeHeader />}
       <main className="main-content" style={{ marginTop: '40px' }}>
-        <Header sections={visibleSections} onMenuClick={scrollToSection} />
+        <Header 
+          sections={visibleSections} 
+          onMenuClick={(e, id) => {
+            e.preventDefault();
+            setMobileMenuOpen(false);
+            setTimeout(() => {
+              const section = document.getElementById(id);
+              let target = null;
+              if (section) {
+                // Ищем заголовок внутри секции
+                target = section.querySelector('h1, .section-title, .hero-title');
+              }
+              if (!target && section) target = section;
+              if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                console.log('scrollIntoView called for', id, 'target:', target);
+              } else {
+                // Fallback: scroll window
+                const y = section ? section.getBoundingClientRect().top + window.scrollY - 24 : 0;
+                window.scrollTo({ top: y, behavior: 'smooth' });
+                console.log('window.scrollTo fallback for', id);
+              }
+            }, 350); // чуть больше времени, чтобы меню успело скрыться
+          }}
+          mobileMenuOpen={mobileMenuOpen}
+          setMobileMenuOpen={setMobileMenuOpen}
+        />
       <div
         className="main-content-inner"
         style={
