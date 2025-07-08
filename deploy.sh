@@ -54,6 +54,7 @@ scp -i $SSH_KEY -r dist/* $SERVER_USER@$SERVER_IP:$SERVER_PATH/
 echo -e "${BLUE}📤 Загружаю backend файлы на сервер...${NC}"
 scp -i $SSH_KEY backend/package.json $SERVER_USER@$SERVER_IP:$BACKEND_PATH/
 scp -i $SSH_KEY backend/server.js $SERVER_USER@$SERVER_IP:$BACKEND_PATH/
+scp -i $SSH_KEY backend/auth.js $SERVER_USER@$SERVER_IP:$BACKEND_PATH/
 
 # Восстанавливаем данные из бекапа, если они есть
 echo -e "${BLUE}🔄 Восстанавливаю сохраненный контент...${NC}"

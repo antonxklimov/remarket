@@ -7,7 +7,9 @@ import htmlToDraft from 'html-to-draftjs';
 import { useAuthContext } from '../contexts/AuthContext';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
-const API_BASE_URL = '/api';
+// Если мы на localhost — используем прод-API
+const isDev = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+const API_BASE_URL = isDev ? 'https://remarket.cc/api' : '/api';
 
 export default function AdminPanel() {
   const { getAuthHeaders, logout } = useAuthContext();
